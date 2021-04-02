@@ -1,11 +1,13 @@
-import { faPaperPlane, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faArrowCircleRight, faCheck, faPaperPlane, faSpinner, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import { dbService } from "../fbase";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { faCheckCircle, faQuestionCircle } from "@fortawesome/free-regular-svg-icons";
+import Modal from 'react-modal';
 
 const Main = styled.main`
   width: 100%;
@@ -173,13 +175,43 @@ const Text = styled.p`
   max-width: 80%;
   word-wrap: break-word;
 `
+const Question = styled.div`
+  margin-top: 20px;
+  svg{
+    font-size: 25px;
+    color: rgba(0,0,0, 0.6);
+  }
+`
 
+const CopyText = styled.div`
+  position: absolute;
+  color: #32c232;
+  font-size: 20px;
+
+  transform: rotate(10deg);
+`
+
+
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)'
+  }
+};
 
 export default function Home() {
   const { register, handleSubmit, getValues, setValue } = useForm();
   const [loading, setLoading] = useState(false)
   const [finished, setFinished] = useState(false)
   const [url, setUrl] = useState("")
+  const [copied, setCopied] = useState(false);
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const [page, setPage] = useState(0)
+
   const onValid = async () => {
     const { card_text } = getValues();
     let random_url = uuidv4();
@@ -193,10 +225,29 @@ export default function Home() {
     setLoading(false)
     setFinished(true)
   };
+  useEffect(() => {
+    setTimeout(() => {
+      setCopied(false)
+    }, 2000)
+  }, [copied])
 
-
+  const NextPage = () => {
+    if (page < 2) {
+      setPage(page + 1)
+    } else {
+      setPage(0)
+    }
+  }
+  const PreviousPage = () => {
+    if (page > 0) {
+      setPage(page - 1)
+    } else {
+      setPage(2)
+    }
+  }
   return (
     <>
+
       {!finished ? !loading ?
         <Main>
           <Paper onSubmit={ handleSubmit(onValid) }>
@@ -210,28 +261,59 @@ export default function Home() {
           </Paper>
           <Btn onClick={ handleSubmit(onValid) }>
             <FontAwesomeIcon icon={ faPaperPlane } size='2x' />
+
           </Btn>
+          <Question onClick={ () => setIsOpen(true) }>
+            <FontAwesomeIcon icon={ faQuestionCircle } />
+          </Question>
         </Main> : <Main>
           <FontAwesomeIcon icon={ faSpinner } size="3x" pulse />
         </Main>
-        : <Card>
-          <PostPaper>
-            <Pin>
-              <Shadow></Shadow>
-              <Metal></Metal>
-              <BottomCircle></BottomCircle>
+        : <>
+          <Card>
+            <PostPaper>
+              <Pin>
+                <Shadow></Shadow>
+                <Metal></Metal>
+                <BottomCircle></BottomCircle>
 
-            </Pin>
-
-
-            <CopyToClipboard text={ document.location.href + "card/" + url }>
-              <Text>{ document.location.href + "card/" + url }</Text>
-            </CopyToClipboard>
+              </Pin>
 
 
-          </PostPaper>
-        </Card>
+              <CopyToClipboard text={ document.location.href + "card/" + url }>
+                <Text onClick={ () => setCopied(true) }>{ document.location.href + "card/" + url }</Text>
+              </CopyToClipboard>
+
+
+            </PostPaper>
+            { copied ? <CopyText >
+              <FontAwesomeIcon icon={ faCheck } />
+            Copied
+        </CopyText> : null }
+
+          </Card>
+
+        </>
       }
+      <Modal
+        isOpen={ modalIsOpen }
+        onRequestClose={ () => setIsOpen(false) }
+        style={ customStyles }
+        contentLabel="Example Modal"
+      >
+        { page === 0 ? <div>page1</div> : page === 1 ? <div>2 page</div> : <div>page3</div> }
+        <Btn onClick={ PreviousPage }>
+          <FontAwesomeIcon icon={ faArrowCircleRight } rotation={ 180 } />
+        </Btn>
+        <Btn onClick={ NextPage }>
+          <FontAwesomeIcon icon={ faArrowCircleRight } />
+        </Btn>
+
+        <Btn onClick={ () => setIsOpen(false) }>
+          <FontAwesomeIcon icon={ faTimes } />
+        </Btn>
+
+      </Modal>
     </>
   )
 }
