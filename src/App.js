@@ -5,8 +5,20 @@ import { ThemeProvider } from "styled-components";
 import { GlobalStyles, lightTheme } from "./styles";
 import { HelmetProvider } from "react-helmet-async";
 import Layout from "./components/Layout";
+import { authService } from "./fbase";
 
 function App() {
+  authService.onAuthStateChanged((user) => {
+    if (user) {
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/firebase.User
+      var uid = user.uid;
+      // ...
+    } else {
+      // User is signed out
+      // ...
+    }
+  });
   return (
     <HelmetProvider>
       <ThemeProvider theme={lightTheme}>
