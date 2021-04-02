@@ -14,7 +14,6 @@ function App() {
       .signInAnonymously()
       .then(() => {
         // Signed in..
-        console.log("ih");
       })
       .catch((error) => {
         var errorCode = error.code;
