@@ -191,6 +191,75 @@ const CopyText = styled.div`
   transform: rotate(10deg);
 `
 
+const Page = styled.div`
+  position: relative;
+  padding: 20px;
+  max-width: 580px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  img{
+    
+    max-width: 90%;
+    max-height: 400px;
+    border-radius: 20px;
+  }
+  div p{
+    margin-top: 20px;
+    margin-left: 50%;
+    transform:translateX(-50%);
+    color: #665f5f;
+    max-width: 80%;
+    font-weight: 500;
+    font-size: 22px;
+
+    word-wrap: break-word;
+  }
+`
+
+const NextButton = styled.button`
+position: absolute;
+  background: transparent;
+  border: none;
+  &:focus {
+    outline: 0;
+  }
+  svg {
+    color: #aaaaaa;
+    font-size: 30px;
+  }
+  right:0;
+`
+const PreviousButton = styled.button`
+  position: absolute;
+
+  background: transparent;
+  border: none;
+  &:focus {
+    outline: 0;
+  }
+  svg {
+    color: #aaaaaa;
+    font-size: 30px;
+  }
+  left:0;
+`
+const CloseButton = styled.button`
+  position: absolute;
+  background: transparent;
+  border: none;
+  &:focus {
+    outline: 0;
+  }
+  svg {
+    color: #aaaaaa;
+    font-size: 30px;
+  }
+  top:0;
+  right:0;
+`
+
 
 const customStyles = {
   content: {
@@ -199,7 +268,10 @@ const customStyles = {
     right: 'auto',
     bottom: 'auto',
     marginRight: '-50%',
-    transform: 'translate(-50%, -50%)'
+    transform: 'translate(-50%, -50%)',
+    border: "none",
+    backgroundColor: "#f4f9f9",
+    borderRadius: "20px"
   }
 };
 
@@ -301,18 +373,32 @@ export default function Home() {
         style={ customStyles }
         contentLabel="Example Modal"
       >
-        { page === 0 ? <div>page1</div> : page === 1 ? <div>2 page</div> : <div>page3</div> }
-        <Btn onClick={ PreviousPage }>
-          <FontAwesomeIcon icon={ faArrowCircleRight } rotation={ 180 } />
-        </Btn>
-        <Btn onClick={ NextPage }>
-          <FontAwesomeIcon icon={ faArrowCircleRight } />
-        </Btn>
+        <Page>
+          { page === 0 ? <div>
 
-        <Btn onClick={ () => setIsOpen(false) }>
-          <FontAwesomeIcon icon={ faTimes } />
-        </Btn>
+            <img src="https://images.unsplash.com/photo-1595452767427-0905ad9b036d?ixid=MXwxMjA3fDB8MHxzZWFyY2h8M3x8cXVlc3Rpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60" />
+            <p>우리 곁에 있는 소중한 사람들에게 고맙다고 감사하다고 말한적 있나요?</p>
+          </div> : page === 1 ? <div>
 
+            <img src="https://images.unsplash.com/photo-1549032305-e816fabf0dd2?ixid=MXwxMjA3fDB8MHxzZWFyY2h8M3x8dGhhbmslMjB5b3V8ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60" />
+            <p>우리는 그 고마움을 알지만 말하지 않고 있을지도 모릅니다.</p>
+          </div> : <div>
+            <img src="https://images.unsplash.com/photo-1566125882500-87e10f726cdc?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MXx8bGV0dGVyfGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60" />
+
+            <p>직접 말하지 못했던 말들을 여기서 해보세요!! 고맙다는 말을 해봐요!!</p>
+
+          </div> }
+          <PreviousButton onClick={ PreviousPage }>
+            <FontAwesomeIcon icon={ faArrowCircleRight } rotation={ 180 } />
+          </PreviousButton>
+          <NextButton onClick={ NextPage }>
+            <FontAwesomeIcon icon={ faArrowCircleRight } />
+          </NextButton>
+
+          <CloseButton onClick={ () => setIsOpen(false) }>
+            <FontAwesomeIcon icon={ faTimes } />
+          </CloseButton>
+        </Page>
       </Modal>
     </>
   )
