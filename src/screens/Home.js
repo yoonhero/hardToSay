@@ -170,6 +170,8 @@ const Card = styled.div`
 const Text = styled.p`
   font-size: 15px;
   color: #69697c;
+  max-width: 80%;
+  word-wrap: break-word;
 `
 
 
