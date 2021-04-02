@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Home from "./screens/Home";
 import Message from "./screens/Message";
@@ -8,17 +9,19 @@ import Layout from "./components/Layout";
 import { authService } from "./fbase";
 
 function App() {
-  authService.onAuthStateChanged((user) => {
-    if (user) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/firebase.User
-      var uid = user.uid;
-      // ...
-    } else {
-      // User is signed out
-      // ...
-    }
-  });
+  useEffect(() => {
+    authService
+      .signInAnonymously()
+      .then(() => {
+        // Signed in..
+        console.log("ih");
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // ...
+      });
+  }, []);
   return (
     <HelmetProvider>
       <ThemeProvider theme={lightTheme}>
