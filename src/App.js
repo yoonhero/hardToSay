@@ -7,6 +7,7 @@ import { GlobalStyles, lightTheme } from "./styles";
 import { HelmetProvider } from "react-helmet-async";
 import Layout from "./components/Layout";
 import { authService } from "./fbase";
+import NotFound from "./screens/NotFound";
 
 function App() {
   useEffect(() => {
@@ -36,6 +37,11 @@ function App() {
             <Route path={`/card/:id`}>
               <Layout>
                 <Message />
+              </Layout>
+            </Route>
+            <Route>
+              <Layout>
+                <NotFound />
               </Layout>
             </Route>
           </Switch>

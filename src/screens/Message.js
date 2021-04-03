@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router";
+import { useHistory, useLocation, useParams } from "react-router";
 import { dbService } from "../fbase";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const ManuScript = styled.div`
   font-family: "MapoBackpacking", serif;
@@ -92,10 +93,20 @@ const Container = styled.div`
   }
 `;
 
+const Button = styled.button`
+  margin-top: 10rem;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 10px;
+  background-color: #e9896a;
+  color: #f8f5f1;
+`;
+
 export default function Message() {
   const { id } = useParams();
   const [data, setData] = useState("");
   var docRef = dbService.collection("cards").doc(id);
+  const location = useHistory();
 
   docRef
     .get()
@@ -104,10 +115,12 @@ export default function Message() {
         setData(doc.data().text);
       } else {
         console.log("No such document!");
+        location.push({ pathname: "/NotFound" });
       }
     })
     .catch((error) => {
       console.log("Error getting document:", error);
+      location.push({ pathname: "/NotFound" });
     });
   function resizeMnuascriptContainer(element) {
     element.style.width = `${
@@ -157,6 +170,10 @@ export default function Message() {
           <p>{data}</p>
         </ManuScript>
       </ManuScriptContainer>
+
+      <Link to="/">
+        <Button>나도 전하기</Button>
+      </Link>
     </Container>
   );
 }
