@@ -34,5 +34,5 @@ react js, firebase, html
 
 ------------
 
-저는 지금 친구들과 함께 동아리에서 멋진 꿈을 만들어 가고 있습니다.
+##저는 지금 친구들과 함께 동아리에서 멋진 꿈을 만들어 가고 있습니다.
 ![ourlogo](https://user-images.githubusercontent.com/57530375/114299285-6198c900-9af5-11eb-857e-e6030b33dece.png)
