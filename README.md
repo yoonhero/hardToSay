@@ -9,7 +9,7 @@ https://hardtosay.netlify.app/
 
 평소 우리 곁에 있는 사람의 중요성을 알지못했나요? 항상 고마웠던 사실을 말하기 부끄러웠나요? 이번 기회에 여러분의 마음을 표현하세요.
 
-### 사용방법
+### `사용방법`
 
 ![initial](https://user-images.githubusercontent.com/57530375/114298792-02d25000-9af3-11eb-8702-fc7ac2db2beb.png)
 
