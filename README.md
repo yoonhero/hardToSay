@@ -11,7 +11,7 @@ https://hardtosay.netlify.app/
 
 ### 사용방법
 
-![initial]("https://user-images.githubusercontent.com/57530375/114298792-02d25000-9af3-11eb-8702-fc7ac2db2beb.png")
+![initial](https://user-images.githubusercontent.com/57530375/114298792-02d25000-9af3-11eb-8702-fc7ac2db2beb.png)
 
 하고 싶은 말은 쓴다.
 
