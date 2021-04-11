@@ -23,4 +23,6 @@ https://hardtosay.netlify.app/
 
 상대방에게 그 마음을 전합니다.
 
+### `사용한 것들`
 
+react js, firebase, html
