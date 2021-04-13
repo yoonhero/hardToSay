@@ -71,10 +71,9 @@ const Input = styled.textarea`
   border: 0;
   outline: 0;
   background: transparent;
-  font-family: "Hi Melody", cursive;
+  font-family: "Nanum Gothic", cursive;
 
-  font-weight: bold;
-  font-size: 24px;
+  font-size: 20px;
   box-sizing: border-box;
   z-index: 1;
   resize: none;
