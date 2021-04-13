@@ -71,10 +71,10 @@ const Input = styled.textarea`
   border: 0;
   outline: 0;
   background: transparent;
-  font-family: "Nanum Gothic", sans-serif;
-  font-weight: 400;
+  font-family: "Hi Melody", cursive;
+
   font-weight: bold;
-  font-size: 18px;
+  font-size: 24px;
   box-sizing: border-box;
   z-index: 1;
   resize: none;
@@ -293,6 +293,11 @@ const Add = styled.ins`
   }
 `;
 
+const SendBtn = styled.img`
+  max-width: 60px;
+  height: auto;
+`;
+
 export default function Home() {
   const { register, handleSubmit, getValues, setValue } = useForm();
   const [loading, setLoading] = useState(false);
@@ -350,7 +355,8 @@ export default function Home() {
               </PaperContent>
             </Paper>
             <Btn onClick={handleSubmit(onValid)}>
-              <FontAwesomeIcon icon={faPaperPlane} size="2x" />
+              {/* <FontAwesomeIcon icon={faPaperPlane} size="2x" /> */}
+              <SendBtn src="./letter.png" />
             </Btn>
             <Question onClick={() => setIsOpen(true)}>
               <FontAwesomeIcon icon={faQuestionCircle} />

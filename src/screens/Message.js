@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 const ManuScript = styled.div`
-  font-family: "MapoBackpacking", serif;
+  font-family: "Do Hyeon", sans-serif;
   font-size: 16px;
   line-height: 32px;
   padding: 8px 0;
