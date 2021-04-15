@@ -2,11 +2,12 @@ import {
   faArrowCircleRight,
   faCheck,
   faPaperPlane,
+  faPrint,
   faSpinner,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
@@ -14,10 +15,12 @@ import { dbService } from "../fbase";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import {
   faCheckCircle,
+  faEdit,
   faQuestionCircle,
 } from "@fortawesome/free-regular-svg-icons";
 import Modal from "react-modal";
 import ScriptTag from "react-script-tag";
+import ReactToPrint, { useReactToPrint } from "react-to-print";
 
 const Main = styled.main`
   width: 100%;
@@ -34,20 +37,36 @@ const Paper = styled.div`
   min-width: 400px;
   height: 480px;
   margin: 0 auto;
-  background: #fafafa;
+  background: ${(props) =>
+    props.modes === 1 ? "#fafafa" : props.modes === 2 ? "#f0eea1" : null};
+  /* background: #fafafa; */
+  /* f0eea1 */
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   overflow: hidden;
+  background-image: ${(props) =>
+    props.modes === 3 ? `url(${props.img})` : null};
+  background-size: auto;
+  background-repeat: no-repeat;
+
+  background-position: center;
+
   &:before {
     content: "";
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
-    width: 60px;
+    margin-left: ${(props) => (props.modes === 2 ? "50px" : null)};
+    width: ${(props) =>
+      props.modes === 1 ? "60px" : props.modes === 2 ? "10px" : "60px"};
+    /* width: 10px; */
     background: radial-gradient(#575450 6px, transparent 7px) repeat-y;
     background-size: 30px 30px;
     border-right: 3px solid #d44147;
+    ${(props) =>
+      props.modes === 2 ? "border-left: 3px solid #d44147;" : null};
+    /* border-left: 3px solid #d44147; */
     box-sizing: border-box;
   }
 `;
@@ -57,12 +76,18 @@ const PaperContent = styled.form`
   top: 30px;
   right: 0;
   bottom: 30px;
-  left: 60px;
+  left: 0px;
   background: linear-gradient(transparent, transparent 28px, #91d1d3 28px);
   background-size: 30px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 const Input = styled.textarea`
-  width: 100%;
+  width: ${(props) =>
+    props.modes === 1 ? "80%" : props.mode === 2 ? "90%" : "80%"};
+
+  /* margin-left: 60px; */
   max-width: 100%;
   height: 100%;
   max-height: 100%;
@@ -297,6 +322,73 @@ const SendBtn = styled.img`
   height: auto;
 `;
 
+const ChangeModeBtn = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+`;
+
+const Modes = styled.div`
+  width: 90%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 10px;
+`;
+
+const EditPaperImg = styled.img`
+  max-width: 100px;
+  height: auto;
+  background-color: white;
+  border-radius: 10px;
+`;
+
+const EditPaper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  color: #424642;
+  div {
+    padding: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    background-color: #f7f6e7;
+    border-radius: 10px;
+    margin-right: 20px;
+    &:hover {
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    }
+    p {
+      font-size: 15px;
+    }
+  }
+  label {
+    padding: 4px;
+    background-color: #f7f6e7;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border-radius: 10px;
+    &:hover {
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    }
+    p {
+      font-size: 15px;
+    }
+  }
+`;
+
+const EditIcon = styled.div`
+  margin-right: 20px;
+  svg {
+    font-size: 15px;
+  }
+`;
+
 export default function Home() {
   const { register, handleSubmit, getValues, setValue } = useForm();
   const [loading, setLoading] = useState(false);
@@ -305,7 +397,10 @@ export default function Home() {
   const [copied, setCopied] = useState(false);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [page, setPage] = useState(0);
-
+  const [paperMode, setPaperMode] = useState(1);
+  const [customPaperImg, setPaperImg] = useState("");
+  const [editPaper, setEditPaper] = useState(false);
+  const componentRef = useRef();
   const onValid = async () => {
     const { card_text } = getValues();
     let random_url = uuidv4();
@@ -339,17 +434,80 @@ export default function Home() {
       setPage(2);
     }
   };
+  const onChange = (event) => {
+    event.preventDefault();
+    const {
+      target: { files },
+    } = event;
+    if (files.length === 0) {
+      return;
+    }
+    const theFile = files[0];
+    const reader = new FileReader();
+    reader.onloadend = (finishedEvent) => {
+      const {
+        currentTarget: { result },
+      } = finishedEvent;
+      setPaperImg(result);
+    };
+    reader.readAsDataURL(theFile);
+  };
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
   return (
     <>
       {!finished ? (
         !loading ? (
           <Main>
-            <Paper onSubmit={handleSubmit(onValid)}>
+            <Modes>
+              <EditIcon onClick={() => setEditPaper(!editPaper)}>
+                <FontAwesomeIcon icon={editPaper ? faTimes : faEdit} />
+              </EditIcon>
+              <input
+                type="file"
+                id="file-input"
+                style={{ display: "none" }}
+                onChange={onChange}
+                accept="image/*"
+              />
+              {/* <div>
+                <p onClick={onPrint}>인쇄</p>
+              </div> */}
+              <div onClick={handlePrint}>
+                <FontAwesomeIcon icon={faPrint} />
+              </div>
+            </Modes>
+            {editPaper ? (
+              <EditPaper style={{ padding: "20px" }}>
+                <div onClick={() => setPaperMode(1)}>
+                  <EditPaperImg src="./letter1.png" />
+                  <p>normal</p>
+                </div>
+                <div onClick={() => setPaperMode(2)}>
+                  <EditPaperImg src="./letter2.png" />
+                  <p>yellow</p>
+                </div>
+                <label for="file-input" onClick={() => setPaperMode(3)}>
+                  <EditPaperImg src="./letter3.png" />
+                  <p>custom</p>
+                </label>
+              </EditPaper>
+            ) : null}
+            <Paper
+              onSubmit={handleSubmit(onValid)}
+              modes={paperMode}
+              img={customPaperImg}
+              ref={componentRef}
+            >
               <PaperContent>
                 <Input
                   placeholder="Write something ..."
                   name="card_text"
                   ref={register({ required: true })}
+                  modes={paperMode}
                 />
               </PaperContent>
             </Paper>
@@ -368,6 +526,7 @@ export default function Home() {
               data-ad-height="100"
             ></Add>
             <Add
+              style={{ marginBottom: "8rem" }}
               className="kakao_ad_area"
               data-ad-unit="DAN-OHeaa7pv4R6Uhxjj"
               data-ad-width="320"
@@ -404,16 +563,20 @@ export default function Home() {
           </Card>
         </>
       )}
+
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={() => setIsOpen(false)}
         style={customStyles}
-        contentLabel="Example Modal"
+        contentLabel="사용법"
       >
         <Page>
           {page === 0 ? (
             <div>
-              <img src="https://images.unsplash.com/photo-1595452767427-0905ad9b036d?ixid=MXwxMjA3fDB8MHxzZWFyY2h8M3x8cXVlc3Rpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60" />
+              <img
+                alt=""
+                src="https://images.unsplash.com/photo-1595452767427-0905ad9b036d?ixid=MXwxMjA3fDB8MHxzZWFyY2h8M3x8cXVlc3Rpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+              />
               <p>
                 우리 곁에 있는 소중한 사람들에게 고맙다고 감사하다고 말한적
                 있나요?
@@ -421,12 +584,18 @@ export default function Home() {
             </div>
           ) : page === 1 ? (
             <div>
-              <img src="https://images.unsplash.com/photo-1549032305-e816fabf0dd2?ixid=MXwxMjA3fDB8MHxzZWFyY2h8M3x8dGhhbmslMjB5b3V8ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60" />
+              <img
+                alt=""
+                src="https://images.unsplash.com/photo-1549032305-e816fabf0dd2?ixid=MXwxMjA3fDB8MHxzZWFyY2h8M3x8dGhhbmslMjB5b3V8ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+              />
               <p>우리는 그 고마움을 알지만 말하지 않고 있을지도 모릅니다.</p>
             </div>
           ) : (
             <div>
-              <img src="https://images.unsplash.com/photo-1566125882500-87e10f726cdc?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MXx8bGV0dGVyfGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60" />
+              <img
+                alt=""
+                src="https://images.unsplash.com/photo-1566125882500-87e10f726cdc?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MXx8bGV0dGVyfGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
+              />
 
               <p>
                 직접 말하지 못했던 말들을 여기서 해보세요!! 고맙다는 말을

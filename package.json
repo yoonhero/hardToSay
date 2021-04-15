@@ -22,6 +22,7 @@
     "react-router-dom": "^5.2.0",
     "react-script-tag": "^1.1.2",
     "react-scripts": "4.0.3",
+    "react-to-print": "^2.12.4",
     "sanitize-html": "^2.3.2",
     "styled-components": "^5.2.1",
     "styled-reset": "^4.3.4",
