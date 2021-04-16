@@ -103,6 +103,9 @@ const Input = styled.textarea`
   z-index: 1;
   resize: none;
   color: rgba(0, 0, 0, 0.7);
+  @media only screen and (max-width: 580px) {
+    width: 70%;
+  }
 `;
 
 const Btn = styled.button`
