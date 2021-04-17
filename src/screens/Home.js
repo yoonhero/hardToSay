@@ -393,6 +393,7 @@ const EditIcon = styled.div`
 `;
 
 export default function Home() {
+  const newAudio = new Audio("./sendmusic.mp3");
   const { register, handleSubmit, getValues, setValue } = useForm();
   const [loading, setLoading] = useState(false);
   const [finished, setFinished] = useState(false);
@@ -405,6 +406,7 @@ export default function Home() {
   const [editPaper, setEditPaper] = useState(false);
   const componentRef = useRef();
   const onValid = async () => {
+    newAudio.play();
     const { card_text } = getValues();
     let random_url = uuidv4();
     setUrl(random_url);
