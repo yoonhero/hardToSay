@@ -412,10 +412,11 @@ export default function Home() {
     setUrl(random_url);
     const cardObj = {
       text: card_text,
+      paperMode: paperMode,
       createdAt: Date.now(),
     };
     setLoading(true);
-    await dbService.collection("cards").doc(random_url).set(cardObj);
+    await dbService.collection("test").doc(random_url).set(cardObj);
     setLoading(false);
     setFinished(true);
   };
