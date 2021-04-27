@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
-import { dbService } from "../fbase";
+import { dbService, storageService } from "../fbase";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import {
   faCheckCircle,
@@ -410,13 +410,24 @@ export default function Home() {
     const { card_text } = getValues();
     let random_url = uuidv4();
     setUrl(random_url);
+
+    let attachmentUrl = "";
+    if (customPaperImg !== "" && paperMode === 3) {
+      const attachmentRef = storageService.ref().child(`${random_url}`);
+      const response = await attachmentRef.putString(
+        customPaperImg,
+        "data_url"
+      );
+      attachmentUrl = await response.ref.getDownloadURL();
+    }
     const cardObj = {
       text: card_text,
       paperMode: paperMode,
       createdAt: Date.now(),
+      attachmentUrl,
     };
     setLoading(true);
-    await dbService.collection("test").doc(random_url).set(cardObj);
+    await dbService.collection("cards").doc(random_url).set(cardObj);
     setLoading(false);
     setFinished(true);
   };

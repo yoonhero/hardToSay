@@ -206,7 +206,7 @@ const Button = styled.button`
 export default function Message() {
   const { id } = useParams();
   const [data, setData] = useState("");
-  var docRef = dbService.collection("test").doc(id);
+  var docRef = dbService.collection("cards").doc(id);
   const location = useHistory();
   useEffect(() => {
     docRef.get().then((doc) => {
@@ -323,7 +323,7 @@ export default function Message() {
               <Input>{data.text}</Input>
             </PaperContent>
           </Paper> */
-        <Paper modes={data.paperMode}>
+        <Paper modes={data.paperMode} img={data.attachmentUrl}>
           <PaperContent modes={data.paperMode}>
             <LetterText>{data.text}</LetterText>
           </PaperContent>
