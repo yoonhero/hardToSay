@@ -331,7 +331,7 @@ export default function Message() {
       )}
 
       <Link to="/">
-        <Button>나도 전하기</Button>
+        <Button>답장하기</Button>
       </Link>
     </Container>
   );
