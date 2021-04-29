@@ -484,9 +484,7 @@ export default function Home() {
   const [editPaper, setEditPaper] = useState(false);
   const [sendTo, setSendTo] = useState(1);
   const componentRef = useRef();
-  useEffect(() => {
-    console.log(sendTo);
-  }, [sendTo]);
+
   const onValid = async () => {
     newAudio.play();
     const { card_text } = getValues();
