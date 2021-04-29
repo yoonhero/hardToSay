@@ -1,6 +1,6 @@
 /* shareKakao.js */
 
-export const shareKakao = ({ siteUrl, sendTo }) => {
+export const shareKakao = (siteUrl, sendTo) => {
   const sharedUrl = window.location.href + "card/";
 
   if (window.Kakao) {

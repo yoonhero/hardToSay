@@ -411,6 +411,7 @@ const ShareBtn = styled.button`
 
 const SendToContainer = styled.div`
   padding: 20px;
+
   h1 {
     font-size: 18px;
   }
@@ -418,9 +419,11 @@ const SendToContainer = styled.div`
 
 const SendTo = styled.div`
   display: flex;
+
   justify-content: center;
   flex-direction: row;
   div {
+    border-radius: 10px;
     cursor: pointer;
     margin: 10px;
     img {
@@ -431,6 +434,27 @@ const SendTo = styled.div`
       padding: 5px;
       font-weight: 400;
     }
+  }
+`;
+
+const SendToSelectBtn = styled.div`
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  outline: none;
+  font-weight: 400;
+  color: #132c33;
+
+  &:hover {
+    background-color: #2ee59d;
+    box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
+    color: #fff;
+    transform: translateY(-7px);
+    h3 {
+      color: #fff;
+    }
+  }
+  h3 {
+    color: #51c4d3;
   }
 `;
 
@@ -578,21 +602,27 @@ export default function Home() {
             <SendToContainer>
               <h1>누구에게 보내나요?</h1>
               <SendTo>
-                <div onClick={() => setSendTo(1)}>
+                <SendToSelectBtn onClick={() => setSendTo(1)}>
                   <img src="./saying.png" />
-                </div>
-                <div onClick={() => setSendTo(2)}>
+                  <p>고마운사람에게</p>
+                  {sendTo === 1 ? <h3>선택됨</h3> : null}
+                </SendToSelectBtn>
+                <SendToSelectBtn onClick={() => setSendTo(2)}>
                   <img src="./saying2.png" />
                   <p>부모님께</p>
-                </div>
-                <div onClick={() => setSendTo(3)}>
+                  {sendTo === 2 ? <h3>선택됨</h3> : null}
+                </SendToSelectBtn>
+                <SendToSelectBtn onClick={() => setSendTo(3)}>
                   <img src="./saying3.png" />
                   <p>배우자에게</p>
-                </div>
-                <div onClick={() => setSendTo(4)}>
+                  {sendTo === 3 ? <h3>선택됨</h3> : null}
+                </SendToSelectBtn>
+                <SendToSelectBtn onClick={() => setSendTo(4)}>
                   <img src="./saying4.png" />
+
                   <p>선생님께</p>
-                </div>
+                  {sendTo === 4 ? <h3>선택됨</h3> : null}
+                </SendToSelectBtn>
               </SendTo>
             </SendToContainer>
 
