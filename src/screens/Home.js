@@ -203,6 +203,9 @@ const Card = styled.div`
   padding: 10vmin;
   font-family: "Nanum", sans-serif;
   font-size: 2rem;
+  @media only screen and (max-width: 720px) {
+    flex-direction: column;
+  }
 `;
 
 const Text = styled.p`
@@ -391,6 +394,23 @@ const EditIcon = styled.div`
     font-size: 15px;
   }
 `;
+const Share = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  @media only screen and (max-width: 720px) {
+    flex-direction: row;
+    padding: 30px;
+  }
+`;
+const ShareBtn = styled.button`
+  max-width: 50px;
+  background: inherit;
+  border: none;
+  img {
+    max-width: 100%;
+  }
+`;
 
 export default function Home() {
   const newAudio = new Audio("./sendmusic.mp3");
@@ -405,6 +425,42 @@ export default function Home() {
   const [customPaperImg, setPaperImg] = useState("");
   const [editPaper, setEditPaper] = useState(false);
   const componentRef = useRef();
+
+  useEffect(() => {
+    if (window.Kakao) {
+      const kakao = window.Kakao;
+      // 중복 initialization 방지
+      if (!kakao.isInitialized()) {
+        // 두번째 step 에서 가져온 javascript key 를 이용하여 initialize
+        kakao.init("e3c92ffffb511df88984ed733797f4df");
+      }
+      kakao.Link.createDefaultButton({
+        // Render 부분 id=kakao-link-btn 을 찾아 그부분에 렌더링을 합니다
+        container: "#kakao-link-btn",
+        objectType: "feed",
+        content: {
+          title: "그전까지 전하기 어려웠던 말들",
+          description:
+            "당신에게 전할 말이 있습니다. 평소 전하기 어려웠던 말들을 해봅니다. 여러분도 평소 고마운 사람에게 고마운 마음을 표현하지 못했다면 표현해보세요. ",
+          imageUrl: "https://hardtosay.netlify.app/saying.png", // i.e. process.env.FETCH_URL + '/logo.png'
+          link: {
+            mobileWebUrl: "https://hardtosay.netlify.app/card/" + url,
+            webUrl: "https://hardtosay.netlify.app/card/" + url,
+          },
+        },
+
+        buttons: [
+          {
+            title: "당신에게 전하는 말",
+            link: {
+              mobileWebUrl: "https://hardtosay.netlify.app/card/" + url,
+              webUrl: "https://hardtosay.netlify.app/card/" + url,
+            },
+          },
+        ],
+      });
+    }
+  }, []);
   const onValid = async () => {
     newAudio.play();
     const { card_text } = getValues();
@@ -535,6 +591,7 @@ export default function Home() {
             <Question onClick={() => setIsOpen(true)}>
               <FontAwesomeIcon icon={faQuestionCircle} />
             </Question>
+
             <Add
               style={{ marginTop: "8rem" }}
               className="kakao_ad_area"
@@ -577,6 +634,20 @@ export default function Home() {
                 Copied
               </CopyText>
             ) : null}
+            <Share className="kakao-share-button">
+              <ShareBtn id="kakao-link-btn">
+                <img src="./kakao.png" />
+              </ShareBtn>
+              <ShareBtn
+                onClick={() =>
+                  window.open(
+                    `https://www.facebook.com/sharer/sharer.php?u=https://hardtosay.netlify.app/card/${url}`
+                  )
+                }
+              >
+                <img src="./facebook.png" />
+              </ShareBtn>
+            </Share>
           </Card>
         </>
       )}
