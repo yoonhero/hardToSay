@@ -409,6 +409,31 @@ const ShareBtn = styled.button`
   }
 `;
 
+const SendToContainer = styled.div`
+  padding: 20px;
+  h1 {
+    font-size: 18px;
+  }
+`;
+
+const SendTo = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  div {
+    cursor: pointer;
+    margin: 10px;
+    img {
+      max-width: 100px;
+      border-radius: 10px;
+    }
+    p {
+      padding: 5px;
+      font-weight: 400;
+    }
+  }
+`;
+
 export default function Home() {
   const newAudio = new Audio("./sendmusic.mp3");
   const { register, handleSubmit, getValues, setValue } = useForm();
@@ -421,8 +446,11 @@ export default function Home() {
   const [paperMode, setPaperMode] = useState(1);
   const [customPaperImg, setPaperImg] = useState("");
   const [editPaper, setEditPaper] = useState(false);
+  const [sendTo, setSendTo] = useState(1);
   const componentRef = useRef();
-
+  useEffect(() => {
+    console.log(sendTo);
+  }, [sendTo]);
   const onValid = async () => {
     newAudio.play();
     const { card_text } = getValues();
@@ -546,10 +574,33 @@ export default function Home() {
                 />
               </PaperContent>
             </Paper>
+
+            <SendToContainer>
+              <h1>누구에게 보내나요?</h1>
+              <SendTo>
+                <div onClick={() => setSendTo(1)}>
+                  <img src="./saying.png" />
+                </div>
+                <div onClick={() => setSendTo(2)}>
+                  <img src="./saying2.png" />
+                  <p>부모님께</p>
+                </div>
+                <div onClick={() => setSendTo(3)}>
+                  <img src="./saying3.png" />
+                  <p>배우자에게</p>
+                </div>
+                <div onClick={() => setSendTo(4)}>
+                  <img src="./saying4.png" />
+                  <p>선생님께</p>
+                </div>
+              </SendTo>
+            </SendToContainer>
+
             <Btn onClick={handleSubmit(onValid)}>
               {/* <FontAwesomeIcon icon={faPaperPlane} size="2x" /> */}
               <SendBtn src="./letter.png" />
             </Btn>
+
             <Question onClick={() => setIsOpen(true)}>
               <FontAwesomeIcon icon={faQuestionCircle} />
             </Question>
@@ -600,7 +651,7 @@ export default function Home() {
           <Share>
             <ShareBtn
               onClick={() => {
-                shareKakao(url);
+                shareKakao(url, sendTo);
               }}
             >
               <img src="./kakao.png" />
