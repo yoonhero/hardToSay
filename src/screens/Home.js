@@ -203,9 +203,6 @@ const Card = styled.div`
   padding: 10vmin;
   font-family: "Nanum", sans-serif;
   font-size: 2rem;
-  @media only screen and (max-width: 720px) {
-    flex-direction: column;
-  }
 `;
 
 const Text = styled.p`
@@ -396,10 +393,9 @@ const EditIcon = styled.div`
 `;
 const Share = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row-reverse;
   padding: 20px;
   @media only screen and (max-width: 720px) {
-    flex-direction: row;
     padding: 30px;
   }
 `;
@@ -613,7 +609,7 @@ export default function Home() {
           </Main>
         )
       ) : (
-        <>
+        <div>
           <Card>
             <PostPaper>
               <Pin>
@@ -634,22 +630,22 @@ export default function Home() {
                 Copied
               </CopyText>
             ) : null}
-            <Share className="kakao-share-button">
-              <ShareBtn id="kakao-link-btn">
-                <img src="./kakao.png" />
-              </ShareBtn>
-              <ShareBtn
-                onClick={() =>
-                  window.open(
-                    `https://www.facebook.com/sharer/sharer.php?u=https://hardtosay.netlify.app/card/${url}`
-                  )
-                }
-              >
-                <img src="./facebook.png" />
-              </ShareBtn>
-            </Share>
           </Card>
-        </>
+          <Share className="kakao-share-button">
+            <ShareBtn id="kakao-link-btn">
+              <img src="./kakao.png" />
+            </ShareBtn>
+            <ShareBtn
+              onClick={() =>
+                window.open(
+                  `https://www.facebook.com/sharer/sharer.php?u=https://hardtosay.netlify.app/card/${url}`
+                )
+              }
+            >
+              <img src="./facebook.png" />
+            </ShareBtn>
+          </Share>
+        </div>
       )}
 
       <Modal
