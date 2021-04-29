@@ -429,10 +429,19 @@ const SendTo = styled.div`
     img {
       max-width: 100px;
       border-radius: 10px;
+      @media only screen and (max-width: 520px) {
+        max-width: 60px;
+      }
     }
     p {
       padding: 5px;
       font-weight: 400;
+      @media only screen and (max-width: 520px) {
+        font-size: 10px;
+      }
+    }
+    @media only screen and (max-width: 520px) {
+      max-width: 60px;
     }
   }
 `;
@@ -455,6 +464,9 @@ const SendToSelectBtn = styled.div`
   }
   h3 {
     color: #51c4d3;
+    @media only screen and (max-width: 520px) {
+      font-size: 10px;
+    }
   }
 `;
 
