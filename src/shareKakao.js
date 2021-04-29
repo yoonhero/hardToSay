@@ -1,7 +1,7 @@
 /* shareKakao.js */
 
 export const shareKakao = (siteUrl, sendTo) => {
-  const sharedUrl = window.location.href + "card/";
+  const sharedUrl = "https://hardtosay.netlify.app/" + "card/";
 
   if (window.Kakao) {
     const kakao = window.Kakao;
