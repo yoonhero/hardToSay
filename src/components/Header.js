@@ -78,7 +78,7 @@ const Infomation = styled.div`
   h1 {
     font-family: "Nanum", sans-serif;
     font-weight: 500;
-    font-size: 14px;
+    font-size: 16px;
   }
   p {
     font-family: "Nanum", sans-serif;

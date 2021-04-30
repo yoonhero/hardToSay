@@ -470,6 +470,21 @@ const SendToSelectBtn = styled.div`
   }
 `;
 
+const CopyRight = styled.p`
+  color: #686666da;
+  font-weight: 400;
+  a {
+    color: #e74c3c;
+    padding: 5px;
+    font-weight: 600;
+  }
+`;
+
+const CopyRightContainer = styled.div`
+  margin: 20px;
+  padding: 20px;
+`;
+
 export default function Home() {
   const newAudio = new Audio("./sendmusic.mp3");
   const { register, handleSubmit, getValues, setValue } = useForm();
@@ -641,9 +656,20 @@ export default function Home() {
               <SendBtn src="./letter.png" />
             </Btn>
 
-            <Question onClick={() => setIsOpen(true)}>
+            {/* <Question onClick={() => setIsOpen(true)}>
               <FontAwesomeIcon icon={faQuestionCircle} />
-            </Question>
+            </Question> */}
+            <CopyRightContainer>
+              <CopyRight>
+                © 2021 All rights reserved | Made By{" "}
+                <a
+                  href="https://www.youtube.com/channel/UCLRcC3qP9gi5l1QUxBqHGjw"
+                  target="__blank"
+                >
+                  Yoonhero 🚀
+                </a>
+              </CopyRight>
+            </CopyRightContainer>
 
             <Add
               style={{ marginTop: "8rem" }}
@@ -760,6 +786,7 @@ export default function Home() {
           </CloseButton>
         </Page>
       </Modal>
+
       <ScriptTag
         type="text/javascript"
         src="//t1.daumcdn.net/kas/static/ba.min.js"
