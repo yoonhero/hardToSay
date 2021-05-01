@@ -22,6 +22,7 @@ import Modal from "react-modal";
 import ScriptTag from "react-script-tag";
 import ReactToPrint, { useReactToPrint } from "react-to-print";
 import { shareKakao } from "../shareKakao";
+import { ImageLoad } from "../components/ImageLoad";
 
 const Main = styled.main`
   width: 100%;
@@ -118,6 +119,10 @@ const Btn = styled.button`
   }
   svg {
     color: #aaaaaa;
+  }
+  img {
+    max-width: 60px;
+    height: auto;
   }
 `;
 
@@ -350,6 +355,47 @@ const EditPaperImg = styled.img`
   border-radius: 10px;
 `;
 
+const EditPaperContainer = styled.div`
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  background-color: #f8f5f1;
+  border-radius: 10px;
+  margin-right: 20px;
+  &:hover {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  }
+  p {
+    font-size: 15px;
+    padding: 6px;
+  }
+  img {
+    max-width: 100px;
+    height: auto;
+    background-color: white;
+    border-radius: 10px;
+  }
+`;
+
+const EditPaperLabel = styled.label`
+  background-color: #f8f5f1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border-radius: 10px;
+  &:hover {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  }
+  p {
+    font-size: 15px;
+    padding: 6px;
+  }
+  img {
+    max-width: 100px;
+    height: auto;
+    background-color: white;
+    border-radius: 10px;
+  }
+`;
+
 const EditPaper = styled.div`
   display: flex;
   flex-direction: row;
@@ -357,33 +403,6 @@ const EditPaper = styled.div`
   justify-content: center;
 
   color: #424642;
-  div {
-    padding: 4px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    background-color: #f7f6e7;
-    border-radius: 10px;
-    margin-right: 20px;
-    &:hover {
-      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-    }
-    p {
-      font-size: 15px;
-    }
-  }
-  label {
-    padding: 4px;
-    background-color: #f7f6e7;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    border-radius: 10px;
-    &:hover {
-      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-    }
-    p {
-      font-size: 15px;
-    }
-  }
 `;
 
 const EditIcon = styled.div`
@@ -423,26 +442,6 @@ const SendTo = styled.div`
   justify-content: center;
   flex-direction: row;
   div {
-    border-radius: 10px;
-    cursor: pointer;
-    margin: 10px;
-    img {
-      max-width: 100px;
-      border-radius: 10px;
-      @media only screen and (max-width: 520px) {
-        max-width: 60px;
-      }
-    }
-    p {
-      padding: 5px;
-      font-weight: 400;
-      @media only screen and (max-width: 520px) {
-        font-size: 10px;
-      }
-    }
-    @media only screen and (max-width: 520px) {
-      max-width: 60px;
-    }
   }
 `;
 
@@ -468,11 +467,33 @@ const SendToSelectBtn = styled.div`
       font-size: 10px;
     }
   }
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 10px;
+
+  img {
+    max-width: 100px;
+    border-radius: 10px;
+    @media only screen and (max-width: 520px) {
+      max-width: 80px;
+    }
+  }
+  p {
+    padding: 5px;
+    font-weight: 400;
+    @media only screen and (max-width: 520px) {
+      font-size: 10px;
+    }
+  }
+  @media only screen and (max-width: 520px) {
+    margin: 4px;
+  }
 `;
 
 const CopyRight = styled.p`
   color: #686666da;
   font-weight: 400;
+  padding: 5px;
   a {
     color: #e74c3c;
     padding: 5px;
@@ -483,6 +504,39 @@ const CopyRight = styled.p`
 const CopyRightContainer = styled.div`
   margin: 20px;
   padding: 20px;
+`;
+
+const Loading = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  img {
+    max-width: 300px;
+  }
+  p {
+    font-size: 20px;
+  }
+  @media only screen and (max-width: 500px) {
+    img {
+      max-width: 250px;
+    }
+    p {
+      font-size: 15px;
+    }
+  }
+`;
+
+const LoadingIcon = styled.div`
+  padding: 20px;
+`;
+
+const Print = styled.div`
+  @media only screen and (max-width: 580px) {
+    display: none;
+  }
 `;
 
 export default function Home() {
@@ -588,24 +642,28 @@ export default function Home() {
               {/* <div>
                 <p onClick={onPrint}>인쇄</p>
               </div> */}
-              <div onClick={handlePrint}>
+              <Print onClick={handlePrint}>
                 <FontAwesomeIcon icon={faPrint} />
-              </div>
+              </Print>
             </Modes>
             {editPaper ? (
               <EditPaper style={{ padding: "20px" }}>
-                <div onClick={() => setPaperMode(1)}>
-                  <EditPaperImg src="./letter1.png" />
+                <EditPaperContainer onClick={() => setPaperMode(1)}>
+                  <ImageLoad image={"./letter1.png"} />
                   <p>normal</p>
-                </div>
-                <div onClick={() => setPaperMode(2)}>
-                  <EditPaperImg src="./letter2.png" />
+                </EditPaperContainer>
+                <EditPaperContainer onClick={() => setPaperMode(2)}>
+                  <ImageLoad image={"./letter2.png"} />
                   <p>yellow</p>
-                </div>
-                <label for="file-input" onClick={() => setPaperMode(3)}>
-                  <EditPaperImg src="./letter3.png" />
+                </EditPaperContainer>
+                <EditPaperLabel
+                  for="file-input"
+                  onClick={() => setPaperMode(3)}
+                >
+                  <ImageLoad image={"./letter3.png"} />
+
                   <p>custom</p>
-                </label>
+                </EditPaperLabel>
               </EditPaper>
             ) : null}
             <Paper
@@ -628,22 +686,23 @@ export default function Home() {
               <h1>누구에게 보내나요?</h1>
               <SendTo>
                 <SendToSelectBtn onClick={() => setSendTo(1)}>
-                  <img src="./saying.png" />
+                  <ImageLoad image={"./saying1.png"} />
                   <p>고마운사람에게</p>
                   {sendTo === 1 ? <h3>선택됨</h3> : null}
                 </SendToSelectBtn>
                 <SendToSelectBtn onClick={() => setSendTo(2)}>
-                  <img src="./saying2.png" />
+                  <ImageLoad image={"./saying2.png"} />
+
                   <p>부모님께</p>
                   {sendTo === 2 ? <h3>선택됨</h3> : null}
                 </SendToSelectBtn>
                 <SendToSelectBtn onClick={() => setSendTo(3)}>
-                  <img src="./saying3.png" />
+                  <ImageLoad image={"./saying3.png"} />
                   <p>배우자에게</p>
                   {sendTo === 3 ? <h3>선택됨</h3> : null}
                 </SendToSelectBtn>
                 <SendToSelectBtn onClick={() => setSendTo(4)}>
-                  <img src="./saying4.png" />
+                  <ImageLoad image={"./saying4.png"} />
 
                   <p>선생님께</p>
                   {sendTo === 4 ? <h3>선택됨</h3> : null}
@@ -653,7 +712,7 @@ export default function Home() {
 
             <Btn onClick={handleSubmit(onValid)}>
               {/* <FontAwesomeIcon icon={faPaperPlane} size="2x" /> */}
-              <SendBtn src="./letter.png" />
+              <ImageLoad image={"./letter.png"} />
             </Btn>
 
             {/* <Question onClick={() => setIsOpen(true)}>
@@ -688,7 +747,17 @@ export default function Home() {
           </Main>
         ) : (
           <Main>
-            <FontAwesomeIcon icon={faSpinner} size="3x" pulse />
+            {/* <FontAwesomeIcon icon={faSpinner} size="3x" pulse /> */}
+            <Loading>
+              <ImageLoad image={"./logo.png"} />
+              <CopyRight>
+                © 2021 All rights reserved | Made By Yoonhero
+              </CopyRight>
+              <CopyRight>Logo Designed by Merong</CopyRight>
+              <LoadingIcon>
+                <FontAwesomeIcon icon={faSpinner} size="3x" pulse />
+              </LoadingIcon>
+            </Loading>
           </Main>
         )
       ) : (
@@ -720,7 +789,7 @@ export default function Home() {
                 shareKakao(url, sendTo);
               }}
             >
-              <img src="./kakao.png" />
+              <ImageLoad image={"./kakao.png"} />
             </ShareBtn>
             <ShareBtn
               onClick={() =>
@@ -729,7 +798,7 @@ export default function Home() {
                 )
               }
             >
-              <img src="./facebook.png" />
+              <ImageLoad image={"./facebook.png"} />
             </ShareBtn>
           </Share>
         </div>

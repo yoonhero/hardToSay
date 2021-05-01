@@ -1,9 +1,18 @@
+import {
+  faArrowCircleRight,
+  faCheck,
+  faPaperPlane,
+  faPrint,
+  faSpinner,
+  faTimes,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useEffect } from "react";
 import { useHistory, useLocation, useParams } from "react-router";
 import { dbService } from "../fbase";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Link } from "react-router-dom";
-
+import { ImageLoad } from "../components/ImageLoad";
 const Main = styled.main`
   width: 100%;
   min-height: 100%;
@@ -203,15 +212,158 @@ const Button = styled.button`
   }
 `;
 
+const updown = keyframes`
+20% {
+      transform: rotate(10deg);
+    }
+    60% {
+      transform: rotate(20deg);
+    }
+    80% {
+      transform: rotate(20deg);
+    }
+    100% {
+      transform: rotate(15deg);
+    }
+`;
+
+const move = keyframes`
+  from {
+      left: -200px;
+      top: 0px;
+    }
+    to {
+      left: 130%;
+      top: 400px;
+    }
+`;
+
+const PlaneCotainer = styled.div`
+  position: absolute;
+  top: 100px;
+
+  width: 100%;
+`;
+
+const Paperplane = styled.div`
+  z-index: 10;
+  position: relative;
+  left: 40%;
+  top: 100px;
+  animation: ${move} 4s linear infinite, ${updown} 4s linear infinite;
+`;
+
+const Right = styled.div`
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 45px solid transparent;
+  border-right: 25px solid transparent;
+  border-bottom: 230px solid white;
+  transform: rotate(61deg);
+`;
+const Bottom = styled.div`
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 25px solid transparent;
+  border-right: 25px solid transparent;
+  border-bottom: 45px solid #676d70;
+  top: 142px;
+  transform: rotate(-5deg);
+  left: -105px;
+  z-index: -1;
+`;
+const Top = styled.div`
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-top: 60px solid #c1c7c9;
+  top: 130px;
+  transform: rotate(5deg);
+  left: -120px;
+  z-index: -3;
+`;
+const Middle = styled.div`
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 30px solid transparent;
+  border-right: 30px solid transparent;
+  border-bottom: 270px solid #c1c7c9;
+  top: -27px;
+  transform: rotate(72deg);
+  left: -15px;
+  z-index: -2;
+`;
+const Left = styled.div`
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 50px solid transparent;
+  border-bottom: 270px solid white;
+  transform: rotate(78deg) skewY(-35deg);
+  left: -37px;
+  z-index: 2;
+  top: -60px;
+`;
+
+const CopyRight = styled.p`
+  color: #686666da;
+  font-weight: 400;
+  padding: 5px;
+  a {
+    color: #e74c3c;
+    padding: 5px;
+    font-weight: 600;
+  }
+`;
+
+const CopyRightContainer = styled.div`
+  margin: 20px;
+  padding: 20px;
+`;
+
+const Loading = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  img {
+    max-width: 300px;
+  }
+  p {
+    font-size: 20px;
+  }
+  @media only screen and (max-width: 500px) {
+    img {
+      max-width: 250px;
+    }
+    p {
+      font-size: 15px;
+    }
+  }
+`;
+
+const LoadingIcon = styled.div`
+  padding: 20px;
+`;
+
 export default function Message() {
   const { id } = useParams();
   const [data, setData] = useState("");
+  const [loading, setLoading] = useState(true);
   var docRef = dbService.collection("cards").doc(id);
   const location = useHistory();
   useEffect(() => {
     docRef.get().then((doc) => {
       if (doc.exists) {
         setData(doc.data());
+        setLoading(false);
       } else {
         console.log("No such document!");
         location.push({ pathname: "/NotFound" });
@@ -303,37 +455,66 @@ export default function Message() {
   //   // });
   // }, [data]);
   return (
-    <Container>
-      <h1>당신에게 전하는 말</h1>
+    <>
+      {!loading ? (
+        <Container>
+          <h1>당신에게 전하는 말</h1>
 
-      {data.paperMode === undefined ? (
-        <ManuScriptContainer>
-          <ManuScript className="manuscript">
-            <p>{data.text}</p>
-          </ManuScript>
-        </ManuScriptContainer>
-      ) : (
-        /* <Paper modes={data.paperMode}>
+          {data.paperMode === undefined ? (
+            <ManuScriptContainer>
+              <ManuScript className="manuscript">
+                <p>{data.text}</p>
+              </ManuScript>
+            </ManuScriptContainer>
+          ) : (
+            /* <Paper modes={data.paperMode}>
           <PaperContent modes={data.paperMode}>
             <Input>{data.text}</Input>
           </PaperContent>
         </Paper> */
-        /* <Paper modes={data.paperMode}>
+            /* <Paper modes={data.paperMode}>
             <PaperContent modes={data.paperMode}>
               <Input>{data.text}</Input>
             </PaperContent>
           </Paper> */
-        <Paper modes={data.paperMode} img={data.attachmentUrl}>
-          <PaperContent modes={data.paperMode}>
-            <LetterText>{data.text}</LetterText>
-          </PaperContent>
-        </Paper>
-      )}
+            <Paper modes={data.paperMode} img={data.attachmentUrl}>
+              <PaperContent modes={data.paperMode}>
+                <LetterText>{data.text}</LetterText>
+              </PaperContent>
+            </Paper>
+          )}
 
-      <Link to="/">
-        <Button>답장하기</Button>
-      </Link>
-    </Container>
+          <Link to="/">
+            <Button>답장하기</Button>
+          </Link>
+        </Container>
+      ) : (
+        <>
+          <Main>
+            {/* <FontAwesomeIcon icon={faSpinner} size="3x" pulse /> */}
+            <Loading>
+              <CopyRight style={{ fontSize: "30px" }}>
+                당신에게 전할 말이 있습니다.
+              </CopyRight>
+              <ImageLoad image={"../../logo.png"} />
+              <CopyRight>
+                © 2021 All rights reserved | Made By Yoonhero
+              </CopyRight>
+              <CopyRight>Logo Designed by Merong</CopyRight>
+            </Loading>
+          </Main>
+          <PlaneCotainer>
+            <Paperplane>
+              <Right></Right>
+              <Left></Left>
+              <Bottom></Bottom>
+              <Top></Top>
+              <Middle></Middle>
+            </Paperplane>
+          </PlaneCotainer>
+        </>
+      )}
+    </>
   );
 }
 
