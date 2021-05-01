@@ -539,6 +539,26 @@ const Print = styled.div`
   }
 `;
 
+const useNotification = (title, options) => {
+  if (!("Notification" in window)) {
+    return;
+  }
+  const fireNotif = () => {
+    if (Notification.permission !== "granted") {
+      Notification.requestPermission().then((permission) => {
+        if (permission === "granted") {
+          new Notification(title, options);
+        } else {
+          return;
+        }
+      });
+    } else {
+      new Notification(title, options);
+    }
+  };
+  return fireNotif;
+};
+
 export default function Home() {
   const newAudio = new Audio("./sendmusic.mp3");
   const { register, handleSubmit, getValues, setValue } = useForm();
@@ -553,8 +573,14 @@ export default function Home() {
   const [editPaper, setEditPaper] = useState(false);
   const [sendTo, setSendTo] = useState(1);
   const componentRef = useRef();
+  const triggerNotif = useNotification("그전까지 전하지 못했던 말들", {
+    body:
+      "당신의 편지가 저장되었습니다. 링크를 복사해 고마운 사람에게 보내보세요.",
+    icon: "./logo.png",
+  });
 
   const onValid = async () => {
+    triggerNotif();
     newAudio.play();
     const { card_text } = getValues();
     let random_url = uuidv4();
