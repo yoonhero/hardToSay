@@ -580,7 +580,7 @@ export default function Home() {
   });
 
   const onValid = async () => {
-    triggerNotif();
+    // triggerNotif();
     newAudio.play();
     const { card_text } = getValues();
     let random_url = uuidv4();
