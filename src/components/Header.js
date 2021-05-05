@@ -108,16 +108,16 @@ export const Header = () => {
           <Icon>
             <Link to="/">
               <Logo className="ourlogo">ATC</Logo>
-              {show ? (
+              { show ? (
                 <Infomation>
-                  <img src="https://hardtosay.netlify.app/ourlogo.png" />
+                  <img src="./atclogo.png" />
                   <h1>저희는 솔빛중학교 어코딩투 동아리입니다.</h1>
                   <p>
                     여러분 곁에 있는 소중한 사람에게 직접 말하지 못했던 감사의
                     말을 해봐요.
                   </p>
                 </Infomation>
-              ) : null}
+              ) : null }
             </Link>
           </Icon>
         </Column>

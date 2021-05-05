@@ -23,6 +23,7 @@ import ScriptTag from "react-script-tag";
 import ReactToPrint, { useReactToPrint } from "react-to-print";
 import { shareKakao } from "../shareKakao";
 import { ImageLoad } from "../components/ImageLoad";
+import emailjs, { init } from 'emailjs-com';
 
 const Main = styled.main`
   width: 100%;
@@ -61,13 +62,13 @@ const Paper = styled.div`
     left: 0;
     margin-left: ${(props) => (props.modes === 2 ? "50px" : null)};
     width: ${(props) =>
-      props.modes === 1 ? "60px" : props.modes === 2 ? "10px" : "60px"};
+    props.modes === 1 ? "60px" : props.modes === 2 ? "10px" : "60px"};
     /* width: 10px; */
     background: radial-gradient(#575450 6px, transparent 7px) repeat-y;
     background-size: 30px 30px;
     border-right: 3px solid #d44147;
     ${(props) =>
-      props.modes === 2 ? "border-left: 3px solid #d44147;" : null};
+    props.modes === 2 ? "border-left: 3px solid #d44147;" : null};
     /* border-left: 3px solid #d44147; */
     box-sizing: border-box;
   }
@@ -539,6 +540,59 @@ const Print = styled.div`
   }
 `;
 
+const Email = styled.input`
+  /* padding: 10px;
+  border: 1px solid #000;
+  background-color: #f4f9f9;
+position: absolute;
+
+border-radius: 10px;
+bottom:10px;
+right: 10px;
+box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+&:focus{
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+} */
+border:0;
+
+  border-bottom:2px solid #555;  
+  background:transparent;
+  width:100%;
+  padding:8px 0 5px 0;
+  font-size:17px;
+  color:#424642;
+  &:focus{ 
+ border:none;	
+ outline:none;
+ border-bottom:2px solid #e74c3c;	
+
+
+}
+`
+
+const InputContainer = styled.div`
+  position:absolute;
+  bottom:10px;
+  right: 10px;
+  label{
+	position:absolute;
+	top:10px;
+	left:0px;
+	font-size:16px;
+	color:#424642;	
+    pointer-event:none;
+	transition: all 0.5s ease-in-out;
+}
+ input:focus ~ label,input:valid ~ label{
+	top:-15px;
+	font-size:15px;
+  transform: scale(30%);
+}
+`
+
+
+
 const useNotification = (title, options) => {
   if (!("Notification" in window)) {
     return;
@@ -579,13 +633,16 @@ export default function Home() {
     icon: "./logo.png",
   });
 
+  useEffect(() => {
+    init("user_kgeKh4BvSxtvktGIWoUNv");
+  }, [])
+
   const onValid = async () => {
     // triggerNotif();
     newAudio.play();
-    const { card_text } = getValues();
+    const { card_text, email } = getValues();
     let random_url = uuidv4();
     setUrl(random_url);
-
     let attachmentUrl = "";
     if (customPaperImg !== "" && paperMode === 3) {
       const attachmentRef = storageService.ref().child(`${random_url}`);
@@ -605,7 +662,16 @@ export default function Home() {
     await dbService.collection("cards").doc(random_url).set(cardObj);
     setLoading(false);
     setFinished(true);
-  };
+    if (email !== "") {
+      emailjs.send("service_0cpyre9", "template_hcgdjnr", {
+        from_name: "고마웠던 사람",
+        to_name: "고마운 사람",
+        message: card_text + "    " + `https://hardtosay.netlify.app/card/${random_url}`,
+        reply_to: email,
+      })
+    };
+  }
+
   useEffect(() => {
     setTimeout(() => {
       setCopied(false);
@@ -655,90 +721,101 @@ export default function Home() {
         !loading ? (
           <Main>
             <Modes>
-              <EditIcon onClick={() => setEditPaper(!editPaper)}>
-                <FontAwesomeIcon icon={editPaper ? faTimes : faEdit} />
+              <EditIcon onClick={ () => setEditPaper(!editPaper) }>
+                <FontAwesomeIcon icon={ editPaper ? faTimes : faEdit } />
               </EditIcon>
               <input
                 type="file"
                 id="file-input"
-                style={{ display: "none" }}
-                onChange={onChange}
+                style={ { display: "none" } }
+                onChange={ onChange }
                 accept="image/*"
               />
               {/* <div>
                 <p onClick={onPrint}>인쇄</p>
               </div> */}
-              <Print onClick={handlePrint}>
-                <FontAwesomeIcon icon={faPrint} />
+              <Print onClick={ handlePrint }>
+                <FontAwesomeIcon icon={ faPrint } />
               </Print>
             </Modes>
             {editPaper ? (
-              <EditPaper style={{ padding: "20px" }}>
-                <EditPaperContainer onClick={() => setPaperMode(1)}>
-                  <ImageLoad image={"./letter1.png"} />
-                  <p>normal</p>
-                </EditPaperContainer>
-                <EditPaperContainer onClick={() => setPaperMode(2)}>
-                  <ImageLoad image={"./letter2.png"} />
-                  <p>yellow</p>
-                </EditPaperContainer>
-                <EditPaperLabel
-                  for="file-input"
-                  onClick={() => setPaperMode(3)}
-                >
-                  <ImageLoad image={"./letter3.png"} />
+              <>
+                <EditPaper style={ { padding: "20px" } }>
+                  <EditPaperContainer onClick={ () => setPaperMode(1) }>
+                    <ImageLoad image={ "./letter1.png" } />
+                    <p>normal</p>
+                  </EditPaperContainer>
+                  <EditPaperContainer onClick={ () => setPaperMode(2) }>
+                    <ImageLoad image={ "./letter2.png" } />
+                    <p>yellow</p>
+                  </EditPaperContainer>
+                  <EditPaperLabel
+                    for="file-input"
+                    onClick={ () => setPaperMode(3) }
+                  >
+                    <ImageLoad image={ "./letter3.png" } />
 
-                  <p>custom</p>
-                </EditPaperLabel>
-              </EditPaper>
-            ) : null}
+                    <p>custom</p>
+                  </EditPaperLabel>
+                </EditPaper>
+                {/* <div>
+                  <button>change fonts</button>
+                </div> */}
+              </>
+            ) : null }
             <Paper
-              onSubmit={handleSubmit(onValid)}
-              modes={paperMode}
-              img={customPaperImg}
-              ref={componentRef}
+              onSubmit={ handleSubmit(onValid) }
+              modes={ paperMode }
+              img={ customPaperImg }
+              ref={ componentRef }
             >
               <PaperContent>
                 <Input
                   placeholder="Write something ..."
                   name="card_text"
-                  ref={register({ required: true })}
-                  modes={paperMode}
+                  ref={ register({ required: true }) }
+                  modes={ paperMode }
                 />
+
               </PaperContent>
+              <InputContainer>
+                <Email type="mail" name="email" placeholder="email" ref={ register({ required: false }) } />
+                <label>이메일로 편지 전달</label>
+              </InputContainer>
+
             </Paper>
 
             <SendToContainer>
               <h1>누구에게 보내나요?</h1>
               <SendTo>
-                <SendToSelectBtn onClick={() => setSendTo(1)}>
-                  <ImageLoad image={"./saying1.png"} />
+                <SendToSelectBtn onClick={ () => setSendTo(1) }>
+                  <ImageLoad image={ "./saying1.png" } />
                   <p>고마운사람에게</p>
-                  {sendTo === 1 ? <h3>선택됨</h3> : null}
+                  { sendTo === 1 ? <h3>선택됨</h3> : null }
                 </SendToSelectBtn>
-                <SendToSelectBtn onClick={() => setSendTo(2)}>
-                  <ImageLoad image={"./saying2.png"} />
+                <SendToSelectBtn onClick={ () => setSendTo(2) }>
+                  <ImageLoad image={ "./saying2.png" } />
 
                   <p>부모님께</p>
-                  {sendTo === 2 ? <h3>선택됨</h3> : null}
+                  { sendTo === 2 ? <h3>선택됨</h3> : null }
                 </SendToSelectBtn>
-                <SendToSelectBtn onClick={() => setSendTo(3)}>
-                  <ImageLoad image={"./saying3.png"} />
+                <SendToSelectBtn onClick={ () => setSendTo(3) }>
+                  <ImageLoad image={ "./saying3.png" } />
                   <p>배우자에게</p>
-                  {sendTo === 3 ? <h3>선택됨</h3> : null}
+                  { sendTo === 3 ? <h3>선택됨</h3> : null }
                 </SendToSelectBtn>
-                <SendToSelectBtn onClick={() => setSendTo(4)}>
-                  <ImageLoad image={"./saying4.png"} />
+                <SendToSelectBtn onClick={ () => setSendTo(4) }>
+                  <ImageLoad image={ "./saying4.png" } />
 
                   <p>선생님께</p>
-                  {sendTo === 4 ? <h3>선택됨</h3> : null}
+                  { sendTo === 4 ? <h3>선택됨</h3> : null }
                 </SendToSelectBtn>
               </SendTo>
             </SendToContainer>
 
-            <Btn onClick={handleSubmit(onValid)}>
-              {/* <FontAwesomeIcon icon={faPaperPlane} size="2x" /> */}
-              <ImageLoad image={"./letter.png"} />
+            <Btn onClick={ handleSubmit(onValid) }>
+              {/* <FontAwesomeIcon icon={faPaperPlane} size="2x" /> */ }
+              <ImageLoad image={ "./letter.png" } />
             </Btn>
 
             {/* <Question onClick={() => setIsOpen(true)}>
@@ -746,7 +823,7 @@ export default function Home() {
             </Question> */}
             <CopyRightContainer>
               <CopyRight>
-                © 2021 All rights reserved | Made By{" "}
+                © 2021 All rights reserved | Made By{ " " }
                 <a
                   href="https://www.youtube.com/channel/UCLRcC3qP9gi5l1QUxBqHGjw"
                   target="__blank"
@@ -757,14 +834,14 @@ export default function Home() {
             </CopyRightContainer>
 
             <Add
-              style={{ marginTop: "8rem" }}
+              style={ { marginTop: "8rem" } }
               className="kakao_ad_area"
               data-ad-unit="DAN-4WYhQChSKcROPiKD"
               data-ad-width="320"
               data-ad-height="100"
             ></Add>
             <Add
-              style={{ marginBottom: "8rem" }}
+              style={ { marginBottom: "8rem" } }
               className="kakao_ad_area"
               data-ad-unit="DAN-OHeaa7pv4R6Uhxjj"
               data-ad-width="320"
@@ -773,15 +850,15 @@ export default function Home() {
           </Main>
         ) : (
           <Main>
-            {/* <FontAwesomeIcon icon={faSpinner} size="3x" pulse /> */}
+            {/* <FontAwesomeIcon icon={faSpinner} size="3x" pulse /> */ }
             <Loading>
-              <ImageLoad image={"./logo.png"} />
+              <ImageLoad image={ "./logo.png" } />
               <CopyRight>
                 © 2021 All rights reserved | Made By Yoonhero
               </CopyRight>
               <CopyRight>Logo Designed by Merong</CopyRight>
               <LoadingIcon>
-                <FontAwesomeIcon icon={faSpinner} size="3x" pulse />
+                <FontAwesomeIcon icon={ faSpinner } size="3x" pulse />
               </LoadingIcon>
             </Loading>
           </Main>
@@ -796,48 +873,48 @@ export default function Home() {
                 <BottomCircle></BottomCircle>
               </Pin>
 
-              <CopyToClipboard text={document.location.href + "card/" + url}>
-                <Text onClick={() => setCopied(true)}>
-                  {document.location.href + "card/" + url}
+              <CopyToClipboard text={ document.location.href + "card/" + url }>
+                <Text onClick={ () => setCopied(true) }>
+                  { document.location.href + "card/" + url }
                 </Text>
               </CopyToClipboard>
             </PostPaper>
-            {copied ? (
+            { copied ? (
               <CopyText>
-                <FontAwesomeIcon icon={faCheck} />
+                <FontAwesomeIcon icon={ faCheck } />
                 Copied
               </CopyText>
-            ) : null}
+            ) : null }
           </Card>
           <Share>
             <ShareBtn
-              onClick={() => {
+              onClick={ () => {
                 shareKakao(url, sendTo);
-              }}
+              } }
             >
-              <ImageLoad image={"./kakao.png"} />
+              <ImageLoad image={ "./kakao.png" } />
             </ShareBtn>
             <ShareBtn
-              onClick={() =>
+              onClick={ () =>
                 window.open(
                   `https://www.facebook.com/sharer/sharer.php?u=https://hardtosay.netlify.app/card/${url}`
                 )
               }
             >
-              <ImageLoad image={"./facebook.png"} />
+              <ImageLoad image={ "./facebook.png" } />
             </ShareBtn>
           </Share>
         </div>
-      )}
+      ) }
 
       <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={() => setIsOpen(false)}
-        style={customStyles}
+        isOpen={ modalIsOpen }
+        onRequestClose={ () => setIsOpen(false) }
+        style={ customStyles }
         contentLabel="사용법"
       >
         <Page>
-          {page === 0 ? (
+          { page === 0 ? (
             <div>
               <img
                 alt=""
@@ -868,16 +945,16 @@ export default function Home() {
                 해봐요!!
               </p>
             </div>
-          )}
-          <PreviousButton onClick={PreviousPage}>
-            <FontAwesomeIcon icon={faArrowCircleRight} rotation={180} />
+          ) }
+          <PreviousButton onClick={ PreviousPage }>
+            <FontAwesomeIcon icon={ faArrowCircleRight } rotation={ 180 } />
           </PreviousButton>
-          <NextButton onClick={NextPage}>
-            <FontAwesomeIcon icon={faArrowCircleRight} />
+          <NextButton onClick={ NextPage }>
+            <FontAwesomeIcon icon={ faArrowCircleRight } />
           </NextButton>
 
-          <CloseButton onClick={() => setIsOpen(false)}>
-            <FontAwesomeIcon icon={faTimes} />
+          <CloseButton onClick={ () => setIsOpen(false) }>
+            <FontAwesomeIcon icon={ faTimes } />
           </CloseButton>
         </Page>
       </Modal>
