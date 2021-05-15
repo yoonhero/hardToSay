@@ -33,7 +33,7 @@ const Paper = styled.div`
   /* f0eea1 */
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  overflow: hidden;
+  overflow: auto;
   background-image: ${(props) =>
     props.modes === 3 ? `url(${props.img})` : null};
   background-size: auto;
@@ -49,13 +49,13 @@ const Paper = styled.div`
     left: 0;
     margin-left: ${(props) => (props.modes === 2 ? "50px" : null)};
     width: ${(props) =>
-      props.modes === 1 ? "60px" : props.modes === 2 ? "10px" : "60px"};
+    props.modes === 1 ? "60px" : props.modes === 2 ? "10px" : "60px"};
     /* width: 10px; */
     background: radial-gradient(#575450 6px, transparent 7px) repeat-y;
     background-size: 30px 30px;
     border-right: 3px solid #d44147;
     ${(props) =>
-      props.modes === 2 ? "border-left: 3px solid #d44147;" : null};
+    props.modes === 2 ? "border-left: 3px solid #d44147;" : null};
     /* border-left: 3px solid #d44147; */
     box-sizing: border-box;
   }
@@ -63,6 +63,7 @@ const Paper = styled.div`
 
 const PaperContent = styled.div`
   position: absolute;
+
   top: 30px;
   right: 0;
   bottom: 30px;
@@ -88,7 +89,8 @@ const LetterText = styled.p`
   background: transparent;
   font-family: "Nanum Gothic", cursive;
 
-  font-size: 20px;
+  font-size: ${(props) =>
+    props.length < 300 ? "20px" : props.length < 500 ? "16px" : props.length < 600 ? "14px" : "12px"};
   box-sizing: border-box;
   z-index: 1;
   resize: none;
@@ -372,9 +374,8 @@ export default function Message() {
   }, []);
 
   function resizeMnuascriptContainer(element) {
-    element.style.width = `${
-      (Math.floor(element.parentElement.offsetWidth / 24) - 1) * 24 - 1
-    }px`;
+    element.style.width = `${(Math.floor(element.parentElement.offsetWidth / 24) - 1) * 24 - 1
+      }px`;
   }
   function resizeImage(element) {
     element.querySelectorAll("img").forEach((img) => {
@@ -463,7 +464,7 @@ export default function Message() {
           {data.paperMode === undefined ? (
             <ManuScriptContainer>
               <ManuScript className="manuscript">
-                <p>{data.text}</p>
+                <p>{ data.text }</p>
               </ManuScript>
             </ManuScriptContainer>
           ) : (
@@ -477,12 +478,12 @@ export default function Message() {
               <Input>{data.text}</Input>
             </PaperContent>
           </Paper> */
-            <Paper modes={data.paperMode} img={data.attachmentUrl}>
-              <PaperContent modes={data.paperMode}>
-                <LetterText>{data.text}</LetterText>
+            <Paper modes={ data.paperMode } img={ data.attachmentUrl }>
+              <PaperContent modes={ data.paperMode }>
+                <LetterText length={ data.text.length }>{ data.text }</LetterText>
               </PaperContent>
             </Paper>
-          )}
+          ) }
 
           <Link to="/">
             <Button>답장하기</Button>
@@ -491,12 +492,12 @@ export default function Message() {
       ) : (
         <>
           <Main>
-            {/* <FontAwesomeIcon icon={faSpinner} size="3x" pulse /> */}
+            {/* <FontAwesomeIcon icon={faSpinner} size="3x" pulse /> */ }
             <Loading>
-              <CopyRight style={{ fontSize: "30px" }}>
+              <CopyRight style={ { fontSize: "30px" } }>
                 당신에게 전할 말이 있습니다.
               </CopyRight>
-              <ImageLoad image={"../../logo.png"} />
+              <ImageLoad image={ "../../logo.png" } />
               <CopyRight>
                 © 2021 All rights reserved | Made By Yoonhero
               </CopyRight>
@@ -513,7 +514,7 @@ export default function Message() {
             </Paperplane>
           </PlaneCotainer>
         </>
-      )}
+      ) }
     </>
   );
 }
