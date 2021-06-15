@@ -778,10 +778,10 @@ export default function Home() {
                 />
 
               </PaperContent>
-              <InputContainer>
-                <Email type="mail" name="email" placeholder="email" ref={ register({ required: false }) } />
-                <label>이메일로 편지 전달</label>
-              </InputContainer>
+//               <InputContainer>
+//                 <Email type="mail" name="email" placeholder="email" ref={ register({ required: false }) } />
+//                 <label>이메일로 편지 전달</label>
+//               </InputContainer>
 
             </Paper>
 
