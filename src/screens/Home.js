@@ -23,6 +23,7 @@ import ReactToPrint, { useReactToPrint } from "react-to-print";
 import { shareKakao } from "../shareKakao";
 import { ImageLoad } from "../components/ImageLoad";
 import emailjs, { init } from "emailjs-com";
+import { LetterText, Paper, PaperContent } from "../components/Letter";
 
 const Main = styled.main`
   width: 100%;
@@ -32,88 +33,14 @@ const Main = styled.main`
   text-align: center;
 `;
 
-const Paper = styled.div`
-  position: relative;
-  width: 90%;
-  max-width: 800px;
-  min-width: 400px;
-  height: 480px;
-  margin: 0 auto;
-  background: ${(props) =>
-    props.modes === 1 ? "#fafafa" : props.modes === 2 ? "#f0eea1" : null};
-  /* background: #fafafa; */
-  /* f0eea1 */
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  overflow: hidden;
-  background-image: ${(props) =>
-    props.modes === 3 ? `url(${props.img})` : null};
-  background-size: auto;
-  background-repeat: no-repeat;
-
-  background-position: center;
-
-  &:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    margin-left: ${(props) => (props.modes === 2 ? "50px" : null)};
-    width: ${(props) =>
-      props.modes === 1 ? "60px" : props.modes === 2 ? "10px" : "60px"};
-    /* width: 10px; */
-    background: radial-gradient(#575450 6px, transparent 7px) repeat-y;
-    background-size: 30px 30px;
-    border-right: 3px solid #d44147;
-    ${(props) =>
-      props.modes === 2 ? "border-left: 3px solid #d44147;" : null};
-    /* border-left: 3px solid #d44147; */
-    box-sizing: border-box;
-  }
-`;
-
-const PaperContent = styled.form`
-  position: absolute;
-  top: 30px;
-  right: 0;
-  bottom: 30px;
-  left: 0px;
-  background: linear-gradient(transparent, transparent 28px, #91d1d3 28px);
-  background-size: 30px 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-const Input = styled.textarea`
-  width: ${(props) =>
-    props.modes === 1 ? "80%" : props.mode === 2 ? "90%" : "80%"};
-
-  /* margin-left: 60px; */
-  max-width: 100%;
-  height: 100%;
-  max-height: 100%;
-  line-height: 30px;
-  padding: 0 10px;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  font-family: "Jua", sans-serif;
-
-  font-size: 20px;
-  box-sizing: border-box;
-  z-index: 1;
-  resize: none;
-  color: rgba(0, 0, 0, 0.7);
-  @media only screen and (max-width: 580px) {
-    width: 70%;
-  }
-`;
-
 const Btn = styled.button`
   margin-top: 20px;
   background: transparent;
   border: none;
+  transform: transition 0.7s linear;
+  &:hover {
+    transform: scale(1.2);
+  }
   &:focus {
     outline: 0;
   }
@@ -217,6 +144,7 @@ const Text = styled.p`
   max-width: 80%;
   word-wrap: break-word;
 `;
+
 const Question = styled.div`
   margin-top: 20px;
   svg {
@@ -315,64 +243,61 @@ const customStyles = {
   },
 };
 
-const Add = styled.ins`
-  width: 100%;
+// const SendBtn = styled.img`
+//   max-width: 60px;
+//   height: auto;
+// `;
 
-  div {
-    width: 320px;
-    height: 100px;
-    margin-left: 50%;
-    transform: translateX(-50%);
+// const ChangeModeBtn = styled.div`
+//   display: flex;
+//   flex-direction: row;
+//   align-items: center;
+//   justify-content: center;
+//   margin-right: 10px;
+// `;
+
+const Modes = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+
+  align-items: center;
+  justify-content: flex-end;
+  padding: 10px 80px;
+  @media only screen and (max-width: 780px) {
+    padding: 10px 20px;
   }
 `;
 
-const SendBtn = styled.img`
-  max-width: 60px;
-  height: auto;
-`;
-
-const ChangeModeBtn = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  margin-right: 10px;
-`;
-
-const Modes = styled.div`
-  width: 90%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-end;
-  padding: 10px;
-`;
-
-const EditPaperImg = styled.img`
-  max-width: 100px;
-  height: auto;
-  background-color: white;
-  border-radius: 10px;
-`;
+// const EditPaperImg = styled.img`
+//   max-width: 100px;
+//   height: auto;
+//   background-color: white;
+//   border-radius: 10px;
+// `;
 
 const EditPaperContainer = styled.div`
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   background-color: #f8f5f1;
-  border-radius: 10px;
-  margin-right: 20px;
+
+  display: flex;
+  border: 2px solid rgb(219, 219, 219);
+  border-radius: 50%;
+  overflow: hidden;
+
   &:hover {
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    transform: scale(1.2);
   }
   p {
     font-size: 15px;
     padding: 6px;
   }
   img {
-    max-width: 100px;
-    height: auto;
+    width: 80px;
+    height: 80px;
     background-color: white;
-    border-radius: 10px;
   }
 `;
 
@@ -380,19 +305,25 @@ const EditPaperLabel = styled.label`
   background-color: #f8f5f1;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  border-radius: 10px;
+
+  display: flex;
+  border: 2px solid rgb(219, 219, 219);
+  border-radius: 50%;
+  overflow: hidden;
+
   &:hover {
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    transform: scale(1.2);
   }
   p {
     font-size: 15px;
     padding: 6px;
   }
   img {
-    max-width: 100px;
-    height: auto;
+    width: 80px;
+    height: 80px;
     background-color: white;
-    border-radius: 10px;
+    background-color: white;
   }
 `;
 
@@ -400,9 +331,13 @@ const EditPaper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
-
+  justify-content: flex-end;
+  gap: 20px;
   color: #424642;
+  padding: 20px 80px;
+  @media only screen and (max-width: 780px) {
+    padding: 20px;
+  }
 `;
 
 const EditIcon = styled.div`
@@ -430,9 +365,14 @@ const ShareBtn = styled.button`
 
 const SendToContainer = styled.div`
   padding: 20px;
-
+  font-family: "Jua", sans-serif;
+  margin-top: 20px;
   h1 {
     font-size: 18px;
+    padding: 10px;
+  }
+  @media only screen and (max-width: 780px) {
+    padding: 0;
   }
 `;
 
@@ -450,8 +390,9 @@ const SendToSelectBtn = styled.div`
   transition: all 0.3s ease 0s;
   outline: none;
   font-weight: 400;
-  color: #132c33;
-
+  font-family: "Jua", sans-serif;
+  color: ${(props) => (props.selected ? "#fff" : "#132c33")};
+  background-color: ${(props) => props.selected && "#2ee59d"};
   &:hover {
     background-color: #2ee59d;
     box-shadow: 0px 15px 20px rgba(46, 229, 157, 0.4);
@@ -473,13 +414,14 @@ const SendToSelectBtn = styled.div`
 
   img {
     max-width: 100px;
+    width: 100%;
     border-radius: 10px;
     @media only screen and (max-width: 520px) {
       max-width: 80px;
     }
   }
   p {
-    padding: 5px;
+    padding: 10px;
     font-weight: 400;
     @media only screen and (max-width: 520px) {
       font-size: 10px;
@@ -738,22 +680,18 @@ export default function Home() {
             </Modes>
             {editPaper ? (
               <>
-                <EditPaper style={{ padding: "20px" }}>
+                <EditPaper>
                   <EditPaperContainer onClick={() => setPaperMode(1)}>
                     <ImageLoad image={"./letter1.png"} />
-                    <p>normal</p>
                   </EditPaperContainer>
                   <EditPaperContainer onClick={() => setPaperMode(2)}>
                     <ImageLoad image={"./letter2.png"} />
-                    <p>yellow</p>
                   </EditPaperContainer>
                   <EditPaperLabel
                     for="file-input"
                     onClick={() => setPaperMode(3)}
                   >
                     <ImageLoad image={"./letter3.png"} />
-
-                    <p>custom</p>
                   </EditPaperLabel>
                 </EditPaper>
                 {/* <div>
@@ -768,7 +706,7 @@ export default function Home() {
               ref={componentRef}
             >
               <PaperContent>
-                <Input
+                <LetterText
                   placeholder="Write something ..."
                   name="card_text"
                   ref={register({ required: true })}
@@ -789,27 +727,39 @@ export default function Home() {
             <SendToContainer>
               <h1>누구에게 보내나요?</h1>
               <SendTo>
-                <SendToSelectBtn onClick={() => setSendTo(1)}>
+                <SendToSelectBtn
+                  selected={sendTo === 1}
+                  onClick={() => setSendTo(1)}
+                >
                   <ImageLoad image={"./saying1.png"} />
-                  <p>고마운사람에게</p>
-                  {sendTo === 1 ? <h3>선택됨</h3> : null}
+                  <p>고마운분에게</p>
+                  {/* {sendTo === 1 ? <h3>선택됨</h3> : null} */}
                 </SendToSelectBtn>
-                <SendToSelectBtn onClick={() => setSendTo(2)}>
+                <SendToSelectBtn
+                  selected={sendTo === 2}
+                  onClick={() => setSendTo(2)}
+                >
                   <ImageLoad image={"./saying2.png"} />
 
                   <p>부모님께</p>
-                  {sendTo === 2 ? <h3>선택됨</h3> : null}
+                  {/* {sendTo === 2 ? <h3>선택됨</h3> : null} */}
                 </SendToSelectBtn>
-                <SendToSelectBtn onClick={() => setSendTo(3)}>
+                <SendToSelectBtn
+                  selected={sendTo === 3}
+                  onClick={() => setSendTo(3)}
+                >
                   <ImageLoad image={"./saying3.png"} />
-                  <p>배우자에게</p>
-                  {sendTo === 3 ? <h3>선택됨</h3> : null}
+                  <p>연인에게</p>
+                  {/* {sendTo === 3 ? <h3>선택됨</h3> : null} */}
                 </SendToSelectBtn>
-                <SendToSelectBtn onClick={() => setSendTo(4)}>
+                <SendToSelectBtn
+                  selected={sendTo === 4}
+                  onClick={() => setSendTo(4)}
+                >
                   <ImageLoad image={"./saying4.png"} />
 
                   <p>선생님께</p>
-                  {sendTo === 4 ? <h3>선택됨</h3> : null}
+                  {/* {sendTo === 4 ? <h3/>선택됨</h3> : null} */}
                 </SendToSelectBtn>
               </SendTo>
             </SendToContainer>
@@ -833,21 +783,6 @@ export default function Home() {
                 </a>
               </CopyRight>
             </CopyRightContainer>
-
-            <Add
-              style={{ marginTop: "8rem" }}
-              className="kakao_ad_area"
-              data-ad-unit="DAN-4WYhQChSKcROPiKD"
-              data-ad-width="320"
-              data-ad-height="100"
-            ></Add>
-            <Add
-              style={{ marginBottom: "8rem" }}
-              className="kakao_ad_area"
-              data-ad-unit="DAN-OHeaa7pv4R6Uhxjj"
-              data-ad-width="320"
-              data-ad-height="100"
-            ></Add>
           </Main>
         ) : (
           <Main>
@@ -962,34 +897,3 @@ export default function Home() {
     </>
   );
 }
-/*
-    천줄을 가겠어
-    천줄을 가겠어
-    천줄을 가겠어
-    천줄을 가겠어
-
-    천줄을 가겠어
-
-    천줄을 가겠어
-    천줄을 가겠어
-    천줄을 가겠어
-
-    천줄을 가겠어
-    천줄을 가겠어
-    천줄을 가겠어천줄을 가겠어
-    천줄을 가겠어
-
-    천줄을 가겠어천줄을 가겠어
-    천줄을 가겠어
-    천줄을 가겠어
-    천줄을 가겠어
-    천줄을 가겠어
-
-    천줄을 가겠어
-    천줄을 가겠어
-
-    천줄을 가겠어천줄을 가겠어
-    천줄을 가겠어
-    천줄을 가겠어
-
-*/

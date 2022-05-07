@@ -5,6 +5,7 @@ import { ImageLoad } from "./ImageLoad";
 
 const SHeader = styled.header`
   position: fixed;
+  width: 140px;
   height: 90vh;
   background-color: ${(props) => props.theme.bgColor};
 
@@ -12,10 +13,13 @@ const SHeader = styled.header`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  @media only screen and (max-width: 1000px) {
+    display: none;
+  }
 `;
 
 const Wrapper = styled.div`
-  max-width: 100px;
+  max-width: 200px;
   padding: 10px;
   width: 100%;
   height: 100%;
@@ -32,21 +36,33 @@ const Column = styled.div`
   text-align: center;
 `;
 
-const Icon = styled.span`
+const Icon = styled.div`
   text-decoration: none;
+  display: inline-box;
   text-align: center;
-  width: 60px;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 100px;
 
-  height: 60px;
   font-family: "Pacifico", cursive;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+
   img {
-    border: 4px solid ${(props) => props.theme.borderColor};
-    border-radius: 50%;
-    width: 100%;
-    height: 100%;
+    width: 50%;
+    height: 50%;
   }
-  @media only screen and (max-width: 1000px) {
-    display: none;
+
+  transition: transform 0.7s ease-in-out;
+  &:hover {
+    transform: rotate(180deg) scale(1.2);
+    background: #99d98c;
   }
 `;
 
@@ -58,12 +74,8 @@ export const Header = () => {
           <Link to="/">
             <Icon>
               <ImageLoad image={"../../logo.png"} />
+              HardToSay
             </Icon>
-          </Link>
-        </Column>
-        <Column>
-          <Link to="/">
-            <Icon>HardToSay</Icon>
           </Link>
         </Column>
       </Wrapper>
