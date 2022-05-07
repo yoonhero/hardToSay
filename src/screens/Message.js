@@ -1,25 +1,28 @@
-import {
-  faArrowCircleRight,
-  faCheck,
-  faPaperPlane,
-  faPrint,
-  faSpinner,
-  faTimes,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useEffect } from "react";
 import { useHistory, useLocation, useParams } from "react-router";
 import { dbService } from "../fbase";
 import styled, { keyframes } from "styled-components";
 import { Link } from "react-router-dom";
 import { ImageLoad } from "../components/ImageLoad";
+import {
+  Paperplane,
+  PlaneCotainer,
+  PlaneRight,
+  PlaneBottom,
+  PlaneTop,
+  PlaneMiddle,
+  PlaneLeft,
+} from "../components/Plane";
+
 const Main = styled.main`
   width: 100%;
-  min-height: 100%;
+  min-height: 100vh;
+  display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
 `;
+
 const Paper = styled.div`
   position: relative;
   width: 90%;
@@ -49,13 +52,13 @@ const Paper = styled.div`
     left: 0;
     margin-left: ${(props) => (props.modes === 2 ? "50px" : null)};
     width: ${(props) =>
-    props.modes === 1 ? "60px" : props.modes === 2 ? "10px" : "60px"};
+      props.modes === 1 ? "60px" : props.modes === 2 ? "10px" : "60px"};
     /* width: 10px; */
     background: radial-gradient(#575450 6px, transparent 7px) repeat-y;
     background-size: 30px 30px;
     border-right: 3px solid #d44147;
     ${(props) =>
-    props.modes === 2 ? "border-left: 3px solid #d44147;" : null};
+      props.modes === 2 ? "border-left: 3px solid #d44147;" : null};
     /* border-left: 3px solid #d44147; */
     box-sizing: border-box;
   }
@@ -90,7 +93,38 @@ const LetterText = styled.p`
   font-family: "Nanum Gothic", cursive;
 
   font-size: ${(props) =>
-    props.length < 300 ? "20px" : props.length < 500 ? "16px" : props.length < 600 ? "14px" : "12px"};
+    props.length < 300
+      ? "20px"
+      : props.length < 500
+      ? "16px"
+      : props.length < 600
+      ? "14px"
+      : "12px"};
+  box-sizing: border-box;
+  z-index: 1;
+  resize: none;
+  color: rgba(0, 0, 0, 0.7);
+  @media only screen and (max-width: 580px) {
+    width: 70%;
+  }
+`;
+
+const Input = styled.textarea`
+  width: ${(props) =>
+    props.modes === 1 ? "80%" : props.mode === 2 ? "90%" : "80%"};
+
+  /* margin-left: 60px; */
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
+  line-height: 30px;
+  padding: 0 10px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-family: "Jua", sans-serif;
+
+  font-size: 20px;
   box-sizing: border-box;
   z-index: 1;
   resize: none;
@@ -214,104 +248,6 @@ const Button = styled.button`
   }
 `;
 
-const updown = keyframes`
-20% {
-      transform: rotate(10deg);
-    }
-    60% {
-      transform: rotate(20deg);
-    }
-    80% {
-      transform: rotate(20deg);
-    }
-    100% {
-      transform: rotate(15deg);
-    }
-`;
-
-const move = keyframes`
-  from {
-      left: -200px;
-      top: 0px;
-    }
-    to {
-      left: 130%;
-      top: 400px;
-    }
-`;
-
-const PlaneCotainer = styled.div`
-  position: absolute;
-  top: 100px;
-
-  width: 100%;
-`;
-
-const Paperplane = styled.div`
-  z-index: 10;
-  position: relative;
-  left: 40%;
-  top: 100px;
-  animation: ${move} 4s linear infinite, ${updown} 4s linear infinite;
-`;
-
-const Right = styled.div`
-  position: absolute;
-  width: 0;
-  height: 0;
-  border-left: 45px solid transparent;
-  border-right: 25px solid transparent;
-  border-bottom: 230px solid white;
-  transform: rotate(61deg);
-`;
-const Bottom = styled.div`
-  position: absolute;
-  width: 0;
-  height: 0;
-  border-left: 25px solid transparent;
-  border-right: 25px solid transparent;
-  border-bottom: 45px solid #676d70;
-  top: 142px;
-  transform: rotate(-5deg);
-  left: -105px;
-  z-index: -1;
-`;
-const Top = styled.div`
-  position: absolute;
-  width: 0;
-  height: 0;
-  border-left: 20px solid transparent;
-  border-right: 20px solid transparent;
-  border-top: 60px solid #c1c7c9;
-  top: 130px;
-  transform: rotate(5deg);
-  left: -120px;
-  z-index: -3;
-`;
-const Middle = styled.div`
-  position: absolute;
-  width: 0;
-  height: 0;
-  border-left: 30px solid transparent;
-  border-right: 30px solid transparent;
-  border-bottom: 270px solid #c1c7c9;
-  top: -27px;
-  transform: rotate(72deg);
-  left: -15px;
-  z-index: -2;
-`;
-const Left = styled.div`
-  position: absolute;
-  width: 0;
-  height: 0;
-  border-left: 50px solid transparent;
-  border-bottom: 270px solid white;
-  transform: rotate(78deg) skewY(-35deg);
-  left: -37px;
-  z-index: 2;
-  top: -60px;
-`;
-
 const CopyRight = styled.p`
   color: #686666da;
   font-weight: 400;
@@ -323,12 +259,8 @@ const CopyRight = styled.p`
   }
 `;
 
-const CopyRightContainer = styled.div`
-  margin: 20px;
-  padding: 20px;
-`;
-
 const Loading = styled.div`
+  font-family: "Jua", sans-serif;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -351,10 +283,6 @@ const Loading = styled.div`
   }
 `;
 
-const LoadingIcon = styled.div`
-  padding: 20px;
-`;
-
 export default function Message() {
   const { id } = useParams();
   const [data, setData] = useState("");
@@ -367,48 +295,17 @@ export default function Message() {
         setData(doc.data());
         setLoading(false);
       } else {
-        console.log("No such document!");
         location.push({ pathname: "/NotFound" });
       }
     });
   }, []);
 
   function resizeMnuascriptContainer(element) {
-    element.style.width = `${(Math.floor(element.parentElement.offsetWidth / 24) - 1) * 24 - 1
-      }px`;
-  }
-  function resizeImage(element) {
-    element.querySelectorAll("img").forEach((img) => {
-      const { naturalWidth, naturalHeight } = img;
-      const ratio = naturalHeight / naturalWidth;
-      const newHeight = element.offsetWidth * ratio;
-
-      img.height = Math.floor(newHeight - (newHeight % 32) - 8);
-    });
+    element.style.width = `${
+      (Math.floor(element.parentElement.offsetWidth / 24) - 1) * 24 - 1
+    }px`;
   }
 
-  function resizeText() {
-    const manuscript = document.querySelectorAll(".manuscript");
-    const handleResize = () => {
-      manuscript.forEach((elt) => {
-        resizeMnuascriptContainer(elt);
-      });
-    };
-    window.addEventListener("load", handleResize, { passive: true });
-    window.addEventListener("resize", handleResize, { passive: true });
-    manuscript.forEach((element) => {
-      element.querySelectorAll("p").forEach((element) => {
-        const text = element.innerText;
-        element.innerHTML = "";
-        [...text].forEach((word) => {
-          const span = document.createElement("span");
-          const textNode = document.createTextNode(word);
-          span.appendChild(textNode);
-          element.append(span);
-        });
-      });
-    });
-  }
   useEffect(() => {
     if (data.paperMode === undefined) {
       const manuscript = document.querySelectorAll(".manuscript");
@@ -433,28 +330,7 @@ export default function Message() {
       });
     }
   }, [data]);
-  // useEffect(() => {
-  //   // const manuscript = document.querySelectorAll(".manuscript");
-  //   // const handleResize = () => {
-  //   //   manuscript.forEach((elt) => {
-  //   //     resizeMnuascriptContainer(elt);
-  //   //   });
-  //   // };
-  //   // window.addEventListener("load", handleResize, { passive: true });
-  //   // window.addEventListener("resize", handleResize, { passive: true });
-  //   // manuscript.forEach((element) => {
-  //   //   element.querySelectorAll("p").forEach((element) => {
-  //   //     const text = element.innerText;
-  //   //     element.innerHTML = "";
-  //   //     [...text].forEach((word) => {
-  //   //       const span = document.createElement("span");
-  //   //       const textNode = document.createTextNode(word);
-  //   //       span.appendChild(textNode);
-  //   //       element.append(span);
-  //   //     });
-  //   //   });
-  //   // });
-  // }, [data]);
+
   return (
     <>
       {!loading ? (
@@ -464,26 +340,16 @@ export default function Message() {
           {data.paperMode === undefined ? (
             <ManuScriptContainer>
               <ManuScript className="manuscript">
-                <p>{ data.text }</p>
+                <p>{data.text}</p>
               </ManuScript>
             </ManuScriptContainer>
           ) : (
-            /* <Paper modes={data.paperMode}>
-          <PaperContent modes={data.paperMode}>
-            <Input>{data.text}</Input>
-          </PaperContent>
-        </Paper> */
-            /* <Paper modes={data.paperMode}>
-            <PaperContent modes={data.paperMode}>
-              <Input>{data.text}</Input>
-            </PaperContent>
-          </Paper> */
-            <Paper modes={ data.paperMode } img={ data.attachmentUrl }>
-              <PaperContent modes={ data.paperMode }>
-                <LetterText length={ data.text.length }>{ data.text }</LetterText>
+            <Paper modes={data.paperMode} img={data.attachmentUrl}>
+              <PaperContent modes={data.paperMode}>
+                <Input disabled defaultValue={data.text} />
               </PaperContent>
             </Paper>
-          ) }
+          )}
 
           <Link to="/">
             <Button>답장하기</Button>
@@ -492,12 +358,11 @@ export default function Message() {
       ) : (
         <>
           <Main>
-            {/* <FontAwesomeIcon icon={faSpinner} size="3x" pulse /> */ }
             <Loading>
-              <CopyRight style={ { fontSize: "30px" } }>
+              <CopyRight style={{ fontSize: "30px" }}>
                 당신에게 전할 말이 있습니다.
               </CopyRight>
-              <ImageLoad image={ "../../logo.png" } />
+              <ImageLoad image={"../../logo.png"} />
               <CopyRight>
                 © 2021 All rights reserved | Made By Yoonhero
               </CopyRight>
@@ -506,15 +371,15 @@ export default function Message() {
           </Main>
           <PlaneCotainer>
             <Paperplane>
-              <Right></Right>
-              <Left></Left>
-              <Bottom></Bottom>
-              <Top></Top>
-              <Middle></Middle>
+              <PlaneRight></PlaneRight>
+              <PlaneLeft></PlaneLeft>
+              <PlaneBottom></PlaneBottom>
+              <PlaneTop></PlaneTop>
+              <PlaneMiddle></PlaneMiddle>
             </Paperplane>
           </PlaneCotainer>
         </>
-      ) }
+      )}
     </>
   );
 }
