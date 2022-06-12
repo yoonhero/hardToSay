@@ -24,10 +24,13 @@ import { shareKakao } from "../shareKakao";
 import { ImageLoad } from "../components/ImageLoad";
 import emailjs, { init } from "emailjs-com";
 import { LetterText, Paper, PaperContent } from "../components/Letter";
+import { Button } from "../components/Button";
 
 const Main = styled.main`
   width: 100%;
   min-height: 100%;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
@@ -531,6 +534,17 @@ const InputContainer = styled.div`
   }
 `;
 
+const BirthdayBtn = styled(Button)`
+  padding: 10px 12px;
+  margin: 0;
+  background-color: ${(props) => (!props.selected ? "#f4f9f9" : "#2ee59d")};
+  font-size: 20px;
+  &:hover {
+    background-color: ${(props) => (props.selected ? "#f4f9f9" : "#2ee59d")};
+    transform: translateY(-3px);
+  }
+`;
+
 const useNotification = (title, options) => {
   if (!("Notification" in window)) {
     return;
@@ -564,6 +578,8 @@ export default function Home() {
   const [customPaperImg, setPaperImg] = useState("");
   const [editPaper, setEditPaper] = useState(false);
   const [sendTo, setSendTo] = useState(1);
+  const [birthday, setBirthday] = useState(false);
+
   const componentRef = useRef();
   const triggerNotif = useNotification("그전까지 전하지 못했던 말들", {
     body: "당신의 편지가 저장되었습니다. 링크를 복사해 고마운 사람에게 보내보세요.",
@@ -592,6 +608,7 @@ export default function Home() {
     const cardObj = {
       text: card_text,
       paperMode: paperMode,
+      birthday: birthday,
       createdAt: Date.now(),
       attachmentUrl,
     };
@@ -763,6 +780,13 @@ export default function Home() {
                 </SendToSelectBtn>
               </SendTo>
             </SendToContainer>
+
+            <BirthdayBtn
+              onClick={() => setBirthday(!birthday)}
+              selected={birthday}
+            >
+              🎁
+            </BirthdayBtn>
 
             <Btn onClick={handleSubmit(onValid)}>
               {/* <FontAwesomeIcon icon={faPaperPlane} size="2x" /> */}

@@ -11,7 +11,7 @@ const Content = styled.main`
 const Layout = ({ children }) => {
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       <Content>{children}</Content>
     </>
   );

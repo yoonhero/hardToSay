@@ -22,6 +22,7 @@ import {
   LetterText,
 } from "../components/Letter";
 import { Button } from "../components/Button";
+import { Birthday, BirthdayTitle } from "../components/Birthday";
 
 const Main = styled.main`
   width: 100%;
@@ -40,19 +41,42 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  h1 {
-    font-size: 25px;
-    font-weight: 600;
-    margin: 20px;
-  }
 `;
+
+const Title = styled.h1`
+  font-size: 25px;
+  font-weight: 600;
+  margin: 20px;
+`;
+
+function timeout(delay) {
+  return new Promise((res) => setTimeout(res, delay));
+}
 
 export default function Message() {
   const { id } = useParams();
   const [data, setData] = useState("");
   const [loading, setLoading] = useState(true);
+  const [text, setText] = useState("");
+
   var docRef = dbService.collection("cards").doc(id);
   const location = useHistory();
+
+  const animateText = async (t) => {
+    let T = "";
+    for (let i = 0; i < t.length; i++) {
+      T += t[i];
+      setText(T);
+      await timeout(100);
+    }
+  };
+
+  useEffect(() => {
+    if (data.text) {
+      animateText(data.text);
+    }
+  }, [data]);
+
   useEffect(() => {
     docRef.get().then((doc) => {
       if (doc.exists) {
@@ -99,7 +123,14 @@ export default function Message() {
     <>
       {!loading ? (
         <Container>
-          <h1>당신에게 전하는 말</h1>
+          {data.birthday ? (
+            <>
+              <BirthdayTitle>Happy BirthDay!!!</BirthdayTitle>
+              <Birthday />
+            </>
+          ) : (
+            <Title>당신에게 전하는 말</Title>
+          )}
 
           {data.paperMode === undefined ? (
             <OriginalLetterContainer>
@@ -110,7 +141,7 @@ export default function Message() {
           ) : (
             <Paper modes={data.paperMode} img={data.attachmentUrl}>
               <PaperContent modes={data.paperMode}>
-                <LetterText disabled defaultValue={data.text} />
+                <LetterText disabled value={text} />
               </PaperContent>
             </Paper>
           )}
