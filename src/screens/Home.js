@@ -784,7 +784,10 @@ export default function Home() {
             </SendToContainer>
 
             <BirthdayBtn
-              onClick={() => setBirthday(!birthday)}
+              onClick={() => {
+                setSendTo(5);
+                setBirthday(!birthday);
+              }}
               selected={birthday}
             >
               🎁
