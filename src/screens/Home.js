@@ -536,12 +536,14 @@ const InputContainer = styled.div`
 
 const BirthdayBtn = styled(Button)`
   padding: 10px 12px;
-  margin: 0;
+  margin: 15px;
   background-color: ${(props) => (!props.selected ? "#f4f9f9" : "#2ee59d")};
   font-size: 20px;
-  &:hover {
-    background-color: ${(props) => (props.selected ? "#f4f9f9" : "#2ee59d")};
-    transform: translateY(-3px);
+  @media only screen and (min-width: 780px) {
+    &:hover {
+      background-color: ${(props) => (props.selected ? "#f4f9f9" : "#2ee59d")};
+      transform: translateY(-3px);
+    }
   }
 `;
 

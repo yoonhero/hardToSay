@@ -13,6 +13,11 @@ const M = styled.div`
 
 const BirthdayTitle = styled.h1`
   font-size: 50px;
+
+  @media only screen and (max-width: 780px) {
+    font-size: 60px;
+    padding: 10px;
+  }
 `;
 
 const opacityChange = keyframes`

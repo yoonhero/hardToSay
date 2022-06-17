@@ -23,6 +23,7 @@ import {
 } from "../components/Letter";
 import { Button } from "../components/Button";
 import { Birthday, BirthdayTitle } from "../components/Birthday";
+import Confetti from "react-dom-confetti";
 
 const Main = styled.main`
   width: 100%;
@@ -52,6 +53,14 @@ const Title = styled.h1`
 function timeout(delay) {
   return new Promise((res) => setTimeout(res, delay));
 }
+
+const confettiConfig = {
+  angle: 90,
+  spread: 45,
+  startVelocity: 45,
+  elementCount: 1200,
+  decay: 0.9,
+};
 
 export default function Message() {
   const { id } = useParams();
@@ -89,7 +98,7 @@ export default function Message() {
   }, []);
 
   function resizeMnuascriptContainer(element) {
-    element.style.width = `${
+    element.style.width = `$
       (Math.floor(element.parentElement.offsetWidth / 24) - 1) * 24 - 1
     }px`;
   }
@@ -149,6 +158,14 @@ export default function Message() {
           <Link to="/">
             <Button>답장하기</Button>
           </Link>
+
+          {/* {data.birthday && (
+            <>
+              <div style={{ width: "100%", margin: "10px" }}>
+                <Confetti active={loading} config={confettiConfig} />
+              </div>
+            </>
+          )} */}
         </Container>
       ) : (
         <>

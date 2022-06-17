@@ -1,6 +1,6 @@
 {
-  "name": "messageto",
-  "version": "0.1.0",
+  "name": "hardtosay",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@babel/runtime": "^7.17.9",
