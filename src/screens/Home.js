@@ -25,6 +25,7 @@ import { ImageLoad } from "../components/ImageLoad";
 import emailjs, { init } from "emailjs-com";
 import { LetterText, Paper, PaperContent } from "../components/Letter";
 import { Button } from "../components/Button";
+import Snowfall from "react-snowfall";
 
 const Main = styled.main`
   width: 100%;
@@ -676,63 +677,65 @@ export default function Home() {
 
   return (
     <>
-      {!finished ? (
-        !loading ? (
-          <Main>
-            <Modes>
-              <EditIcon onClick={() => setEditPaper(!editPaper)}>
-                <FontAwesomeIcon icon={editPaper ? faTimes : faEdit} />
-              </EditIcon>
-              <input
-                type="file"
-                id="file-input"
-                style={{ display: "none" }}
-                onChange={onChange}
-                accept="image/*"
-              />
-              {/* <div>
+      <Snowfall />
+      <>
+        {!finished ? (
+          !loading ? (
+            <Main>
+              <Modes>
+                <EditIcon onClick={() => setEditPaper(!editPaper)}>
+                  <FontAwesomeIcon icon={editPaper ? faTimes : faEdit} />
+                </EditIcon>
+                <input
+                  type="file"
+                  id="file-input"
+                  style={{ display: "none" }}
+                  onChange={onChange}
+                  accept="image/*"
+                />
+                {/* <div>
                 <p onClick={onPrint}>인쇄</p>
               </div> */}
-              <Print onClick={handlePrint}>
-                <FontAwesomeIcon icon={faPrint} />
-              </Print>
-            </Modes>
-            {editPaper ? (
-              <>
-                <EditPaper>
-                  <EditPaperContainer onClick={() => setPaperMode(1)}>
-                    <ImageLoad image={"./letter1.png"} />
-                  </EditPaperContainer>
-                  <EditPaperContainer onClick={() => setPaperMode(2)}>
-                    <ImageLoad image={"./letter2.png"} />
-                  </EditPaperContainer>
-                  <EditPaperLabel
-                    for="file-input"
-                    onClick={() => setPaperMode(3)}
-                  >
-                    <ImageLoad image={"./letter3.png"} />
-                  </EditPaperLabel>
-                </EditPaper>
-                {/* <div>
+                <Print onClick={handlePrint}>
+                  <FontAwesomeIcon icon={faPrint} />
+                </Print>
+              </Modes>
+              {editPaper ? (
+                <>
+                  <EditPaper>
+                    <EditPaperContainer onClick={() => setPaperMode(1)}>
+                      <ImageLoad image={"./letter1.png"} />
+                    </EditPaperContainer>
+                    <EditPaperContainer onClick={() => setPaperMode(2)}>
+                      <ImageLoad image={"./letter2.png"} />
+                    </EditPaperContainer>
+                    <EditPaperLabel
+                      for="file-input"
+                      onClick={() => setPaperMode(3)}
+                    >
+                      <ImageLoad image={"./letter3.png"} />
+                    </EditPaperLabel>
+                  </EditPaper>
+                  {/* <div>
                   <button>change fonts</button>
                 </div> */}
-              </>
-            ) : null}
-            <Paper
-              onSubmit={handleSubmit(onValid)}
-              modes={paperMode}
-              img={customPaperImg}
-              ref={componentRef}
-            >
-              <PaperContent>
-                <LetterText
-                  placeholder="Write something ..."
-                  name="card_text"
-                  ref={register({ required: true })}
-                  modes={paperMode}
-                />
-              </PaperContent>
-              {/* <InputContainer>
+                </>
+              ) : null}
+              <Paper
+                onSubmit={handleSubmit(onValid)}
+                modes={paperMode}
+                img={customPaperImg}
+                ref={componentRef}
+              >
+                <PaperContent>
+                  <LetterText
+                    placeholder="Write something ..."
+                    name="card_text"
+                    ref={register({ required: true })}
+                    modes={paperMode}
+                  />
+                </PaperContent>
+                {/* <InputContainer>
                 <Email
                   type="mail"
                   name="email"
@@ -741,136 +744,137 @@ export default function Home() {
                 />
                 <label>이메일로 편지 전달</label>
               </InputContainer> */}
-            </Paper>
+              </Paper>
 
-            <SendToContainer>
-              <h1>누구에게 보내나요?</h1>
-              <SendTo>
-                <SendToSelectBtn
-                  selected={sendTo === 1}
-                  onClick={() => setSendTo(1)}
-                >
-                  <ImageLoad image={"./saying1.png"} />
-                  <p>고마운분에게</p>
-                  {/* {sendTo === 1 ? <h3>선택됨</h3> : null} */}
-                </SendToSelectBtn>
-                <SendToSelectBtn
-                  selected={sendTo === 2}
-                  onClick={() => setSendTo(2)}
-                >
-                  <ImageLoad image={"./saying2.png"} />
+              <SendToContainer>
+                <h1>누구에게 보내나요?</h1>
+                <SendTo>
+                  <SendToSelectBtn
+                    selected={sendTo === 1}
+                    onClick={() => setSendTo(1)}
+                  >
+                    <ImageLoad image={"./saying1.png"} />
+                    <p>고마운분에게</p>
+                    {/* {sendTo === 1 ? <h3>선택됨</h3> : null} */}
+                  </SendToSelectBtn>
+                  <SendToSelectBtn
+                    selected={sendTo === 2}
+                    onClick={() => setSendTo(2)}
+                  >
+                    <ImageLoad image={"./saying2.png"} />
 
-                  <p>부모님께</p>
-                  {/* {sendTo === 2 ? <h3>선택됨</h3> : null} */}
-                </SendToSelectBtn>
-                <SendToSelectBtn
-                  selected={sendTo === 3}
-                  onClick={() => setSendTo(3)}
-                >
-                  <ImageLoad image={"./saying3.png"} />
-                  <p>연인에게</p>
-                  {/* {sendTo === 3 ? <h3>선택됨</h3> : null} */}
-                </SendToSelectBtn>
-                <SendToSelectBtn
-                  selected={sendTo === 4}
-                  onClick={() => setSendTo(4)}
-                >
-                  <ImageLoad image={"./saying4.png"} />
+                    <p>부모님께</p>
+                    {/* {sendTo === 2 ? <h3>선택됨</h3> : null} */}
+                  </SendToSelectBtn>
+                  <SendToSelectBtn
+                    selected={sendTo === 3}
+                    onClick={() => setSendTo(3)}
+                  >
+                    <ImageLoad image={"./saying3.png"} />
+                    <p>연인에게</p>
+                    {/* {sendTo === 3 ? <h3>선택됨</h3> : null} */}
+                  </SendToSelectBtn>
+                  <SendToSelectBtn
+                    selected={sendTo === 4}
+                    onClick={() => setSendTo(4)}
+                  >
+                    <ImageLoad image={"./saying4.png"} />
 
-                  <p>선생님께</p>
-                  {/* {sendTo === 4 ? <h3/>선택됨</h3> : null} */}
-                </SendToSelectBtn>
-              </SendTo>
-            </SendToContainer>
+                    <p>선생님께</p>
+                    {/* {sendTo === 4 ? <h3/>선택됨</h3> : null} */}
+                  </SendToSelectBtn>
+                </SendTo>
+              </SendToContainer>
 
-            <BirthdayBtn
-              onClick={() => {
-                setSendTo(5);
-                setBirthday(!birthday);
-              }}
-              selected={birthday}
-            >
-              🎁
-            </BirthdayBtn>
+              <BirthdayBtn
+                onClick={() => {
+                  setSendTo(5);
+                  setBirthday(!birthday);
+                }}
+                selected={birthday}
+              >
+                🎁
+              </BirthdayBtn>
 
-            <Btn onClick={handleSubmit(onValid)}>
-              {/* <FontAwesomeIcon icon={faPaperPlane} size="2x" /> */}
-              <ImageLoad image={"./letter.png"} />
-            </Btn>
+              <Btn onClick={handleSubmit(onValid)}>
+                {/* <FontAwesomeIcon icon={faPaperPlane} size="2x" /> */}
+                <ImageLoad image={"./letter.png"} />
+              </Btn>
 
-            {/* <Question onClick={() => setIsOpen(true)}>
+              {/* <Question onClick={() => setIsOpen(true)}>
               <FontAwesomeIcon icon={faQuestionCircle} />
             </Question> */}
-            <CopyRightContainer>
-              <CopyRight>
-                © 2021 All rights reserved | Made By{" "}
-                <a
-                  href="https://www.youtube.com/channel/UCLRcC3qP9gi5l1QUxBqHGjw"
-                  target="__blank"
-                >
-                  Yoonhero 🚀
-                </a>
-              </CopyRight>
-            </CopyRightContainer>
-          </Main>
+              <CopyRightContainer>
+                <CopyRight>
+                  © 2021 All rights reserved | Made By{" "}
+                  <a
+                    href="https://www.youtube.com/channel/UCLRcC3qP9gi5l1QUxBqHGjw"
+                    target="__blank"
+                  >
+                    Yoonhero 🚀
+                  </a>
+                </CopyRight>
+              </CopyRightContainer>
+            </Main>
+          ) : (
+            <Main>
+              {/* <FontAwesomeIcon icon={faSpinner} size="3x" pulse /> */}
+              <Loading>
+                <ImageLoad image={"./logo.png"} />
+                <CopyRight>
+                  © 2021 All rights reserved | Made By Yoonhero
+                </CopyRight>
+                <CopyRight>Logo Designed by Merong</CopyRight>
+                <LoadingIcon>
+                  <FontAwesomeIcon icon={faSpinner} size="3x" pulse />
+                </LoadingIcon>
+              </Loading>
+            </Main>
+          )
         ) : (
-          <Main>
-            {/* <FontAwesomeIcon icon={faSpinner} size="3x" pulse /> */}
-            <Loading>
-              <ImageLoad image={"./logo.png"} />
-              <CopyRight>
-                © 2021 All rights reserved | Made By Yoonhero
-              </CopyRight>
-              <CopyRight>Logo Designed by Merong</CopyRight>
-              <LoadingIcon>
-                <FontAwesomeIcon icon={faSpinner} size="3x" pulse />
-              </LoadingIcon>
-            </Loading>
-          </Main>
-        )
-      ) : (
-        <div>
-          <Card>
-            <PostPaper>
-              <Pin>
-                <Shadow></Shadow>
-                <Metal></Metal>
-                <BottomCircle></BottomCircle>
-              </Pin>
+          <div>
+            <Card>
+              <PostPaper>
+                <Pin>
+                  <Shadow></Shadow>
+                  <Metal></Metal>
+                  <BottomCircle></BottomCircle>
+                </Pin>
 
-              <CopyToClipboard text={document.location.href + "card/" + url}>
-                <Text onClick={() => setCopied(true)}>
-                  {document.location.href + "card/" + url}
-                </Text>
-              </CopyToClipboard>
-            </PostPaper>
-            {copied ? (
-              <CopyText>
-                <FontAwesomeIcon icon={faCheck} />
-                Copied
-              </CopyText>
-            ) : null}
-          </Card>
-          <Share>
-            <ShareBtn
-              onClick={() => {
-                shareKakao(url, sendTo);
-              }}
-            >
-              <ImageLoad image={"./kakao.png"} />
-            </ShareBtn>
-            <ShareBtn
-              onClick={() =>
-                window.open(
-                  `https://www.facebook.com/sharer/sharer.php?u=https://hardtosay.netlify.app/card/${url}`
-                )
-              }
-            >
-              <ImageLoad image={"./facebook.png"} />
-            </ShareBtn>
-          </Share>
-        </div>
-      )}
+                <CopyToClipboard text={document.location.href + "card/" + url}>
+                  <Text onClick={() => setCopied(true)}>
+                    {document.location.href + "card/" + url}
+                  </Text>
+                </CopyToClipboard>
+              </PostPaper>
+              {copied ? (
+                <CopyText>
+                  <FontAwesomeIcon icon={faCheck} />
+                  Copied
+                </CopyText>
+              ) : null}
+            </Card>
+            <Share>
+              <ShareBtn
+                onClick={() => {
+                  shareKakao(url, sendTo);
+                }}
+              >
+                <ImageLoad image={"./kakao.png"} />
+              </ShareBtn>
+              <ShareBtn
+                onClick={() =>
+                  window.open(
+                    `https://www.facebook.com/sharer/sharer.php?u=https://hardtosay.netlify.app/card/${url}`
+                  )
+                }
+              >
+                <ImageLoad image={"./facebook.png"} />
+              </ShareBtn>
+            </Share>
+          </div>
+        )}
+      </>
 
       <Modal
         isOpen={modalIsOpen}
@@ -911,6 +915,7 @@ export default function Home() {
               </p>
             </div>
           )}
+
           <PreviousButton onClick={PreviousPage}>
             <FontAwesomeIcon icon={faArrowCircleRight} rotation={180} />
           </PreviousButton>
